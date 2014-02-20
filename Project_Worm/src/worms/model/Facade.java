@@ -75,14 +75,14 @@ public class Facade implements IFacade {
 	}
 
 	@Override
-	public double getRadius(Worm worm) {
-		// TODO Auto-generated method stub
-		return 0;
+	public double getRadius(Worm worm) { //TODO: Add comments above
+		return worm.getRadius();
 	}
 
 	@Override
 	public void setRadius(Worm worm, double newRadius) {
 		// TODO Auto-generated method stub
+		// TODO call worm.setMass() as well.
 		
 	}
 
