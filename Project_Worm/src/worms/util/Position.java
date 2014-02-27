@@ -2,6 +2,7 @@ package worms.util;
 
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Immutable;
+import be.kuleuven.cs.som.annotate.Raw;
 
 /**
  * 
@@ -28,8 +29,10 @@ public class Position {
 	 * 			| new.getY() == y
 	 * 
 	 * @throws	IllegalArgumentException
+	 * 			When x- or y-coordinate aren't valid coordinates.
 	 * 			| !isValidPosition(x,y)
 	 */
+	@Raw
 	public Position(double x, double y) throws IllegalArgumentException {
 		if(!isValidPosition(x,y))
 			throw new IllegalArgumentException("A negative Coordinate is not allowed.");
