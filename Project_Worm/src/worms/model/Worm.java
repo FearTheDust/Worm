@@ -47,6 +47,47 @@ public class Worm {
 	}
 	
 	/**
+	 * Move this worm a certain amount of steps in the direction it's facing.
+	 * @param steps The amount of steps this worm takes.
+	 * @post	The new position is the old position plus
+	 * 				the amount of steps proportional to the direction this worm is facing.
+	 * 			| new.getPosition()==new Position(
+	 * 				this.getPosition().getX()+steps*Math.cos(this.getAngle())*this.getRadius(),
+	 * 				this.getPosition().getY()+steps*Math.sin(this.getAngle())*this.getRadius())
+	 * @post	The new action points is equal to the old action points minus the 
+	 * 				cost to move.
+	 * 			| new.getCurrentActionPoints()==
+	 * 				this.getCurrentActionPoints()-getMoveCost(steps,this.getAngle())
+	 * @throws IllegalArgumentException
+	 * 			If steps is smaller than zero or if this worm doesn't have enough action points.
+	 * 			| steps<0 || this.getMoveCost(steps,this.getAngle())>this.getCurrentActionPoints()
+	 */
+	public void move(int steps) throws IllegalArgumentException{
+		if(steps<0)
+			throw new IllegalArgumentException("Steps must be higher than or equal to zero");
+		if(getMoveCost(steps,getAngle())>getCurrentActionPoints())
+			throw new IllegalArgumentException("You don't have enough Action Points");
+		double x=this.getPosition().getX()+steps*Math.cos(getAngle())*getRadius();
+		double y=this.getPosition().getY()+steps*Math.sin(getAngle())*getRadius();
+		setPosition(new Position(x,y));
+		int actionPoints=getCurrentActionPoints()-getMoveCost(steps,getAngle());
+		setCurrentActionPoints(actionPoints);
+	}
+	
+	/**
+	 * Returns the cost to move a certain amount of steps to move in a certain direction.
+	 * @param steps The amount of steps to move.
+	 * @param angle Determines the direction to move in.
+	 * @return 	The cost to move.
+	 * 			| (steps*Math.ceil((Math.abs(Math.cos(angle))
+	 *			+Math.abs(4*Math.sin(angle)))))
+	 */
+	public static int getMoveCost(int steps, double angle){
+		return (int) (steps*Math.ceil((Math.abs(Math.cos(angle))
+				+Math.abs(4*Math.sin(angle)))));
+	}
+	
+	/**
 	 * Set the new position of this worm.
 	 * @param position The new position of this worm.
 	 * 
@@ -57,7 +98,7 @@ public class Worm {
 	 * 			When position is null.
 	 * 			| position == null
 	 */
-	public void setPosition(Position position) throws NullPointerException {
+	private void setPosition(Position position) throws NullPointerException {
 		if(position == null)
 			throw new NullPointerException();
 		
@@ -254,13 +295,6 @@ public class Worm {
 	}
 	
 	private int currentActionPoints;
-	
-	
-	
-	
-	
-	
-
 	
 	
 	
