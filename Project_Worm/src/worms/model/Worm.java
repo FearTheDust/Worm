@@ -117,6 +117,36 @@ public class Worm {
 	}
 	
 	/**
+	 * Turn this worm with a given angle.
+	 * @param angle The angle to turn.
+	 * @pre		The angle must be between -2*Math.PI and 2*Math.PI
+	 * 			| (angle > -2*Math.PI && angle < 2*Math.PI) 				//TODO: (vraag) isValidAngle(Math.abs) && isValidAngle() ...????
+	 * @pre		The cost to turn should be less or equal to the amount we have.
+	 * 			| this.getCurrentActionPoints() >= getTurnCost(angle)
+	 * 
+	 * @post	The new worm's action points is equal to the old amount minus the cost to turn.
+	 * 			| new.getCurrentActionPoints() = this.getCurrentActionPoints() - getTurnCost(angle)
+	 * @post	The new angle is equal to the old angle + the given angle.
+	 * 			| new.getAngle() = this.getAngle() + angle
+	 */
+	public void turn(double angle) {
+		assert (angle > -2*Math.PI && angle < 2*Math.PI);
+		assert this.getCurrentActionPoints() >= getTurnCost(angle);
+		
+		this.setAngle(this.getAngle() + angle);
+		this.setCurrentActionPoints(this.getCurrentActionPoints() - getTurnCost(angle));
+	}
+	
+	/**
+	 * Returns the cost to move the angle.
+	 * @param angle The angle to turn.
+	 * @return The cost to turn.
+	 */
+	public static int getTurnCost(double angle) {
+		return (int) ((60 * angle) /2*Math.PI);
+	}
+	
+	/**
 	 * Set the new angle of this worm.
 	 * @param angle The new angle of this worm.
 	 * 
