@@ -58,14 +58,12 @@ public class Facade implements IFacade {
 
 	@Override
 	public double getX(Worm worm) {
-		// TODO Auto-generated method stub
-		return 0;
+		return worm.getPosition().getX();
 	}
 
 	@Override
 	public double getY(Worm worm) {
-		// TODO Auto-generated method stub
-		return 0;
+		return worm.getPosition().getY();
 	}
 
 	@Override
@@ -75,7 +73,7 @@ public class Facade implements IFacade {
 	}
 
 	@Override
-	public double getRadius(Worm worm) { //TODO: Add comments above
+	public double getRadius(Worm worm) {
 		return worm.getRadius();
 	}
 
