@@ -1,5 +1,7 @@
 package worms.util;
 
+import com.sun.org.apache.xml.internal.serializer.utils.Utils;
+
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Immutable;
 import be.kuleuven.cs.som.annotate.Raw;
@@ -13,6 +15,7 @@ import be.kuleuven.cs.som.annotate.Raw;
  * 
  *  @author Admin
  *  @version 1.0
+ *  
  */
 
 public class Position {
@@ -48,7 +51,7 @@ public class Position {
 	 * @return True if and only if the given x and y are both greater than or equal to 0.
 	 */
 	public static boolean isValidPosition(double x, double y) {
-		return (x >= 0 && y >= 0);
+		return (Util.fuzzyGreaterThanOrEqualTo(x, 0) && Util.fuzzyGreaterThanOrEqualTo(y,0));
 	}
 	
 	/**

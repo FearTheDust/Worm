@@ -1,5 +1,7 @@
 package worms.model;
 
+import worms.util.Position;
+
 /**
  * TODO: Implement the whole class.
  * @author Admin
@@ -16,44 +18,45 @@ public class Facade implements IFacade {
 
 	@Override
 	public boolean canMove(Worm worm, int nbSteps) {
-		// TODO Auto-generated method stub
+		//TODO: (vraag) Do they mean it can't be a negative value or do they mean us to check the actionPoints?
 		return false;
 	}
 
 	@Override
-	public void move(Worm worm, int nbSteps) {
-		// TODO Auto-generated method stub
-		
+	public void move(Worm worm, int nbSteps) throws ModelException {
+		try {
+			worm.move(nbSteps);
+		} catch(IllegalArgumentException ex) {
+			throw new ModelException(ex.getMessage());
+		}
 	}
 
 	@Override
 	public boolean canTurn(Worm worm, double angle) {
-		// TODO Auto-generated method stub
-		return false;
+		return Worm.getTurnCost(angle) <= worm.getCurrentActionPoints();
 	}
 
 	@Override
 	public void turn(Worm worm, double angle) {
-		// TODO Auto-generated method stub
-		
+		worm.turn(angle); //TODO: Handle precondition!
 	}
 
 	@Override
 	public void jump(Worm worm) {
-		// TODO Auto-generated method stub
-		
+		worm.jump();
 	}
 
 	@Override
 	public double getJumpTime(Worm worm) {
-		// TODO Auto-generated method stub
-		return 0;
+		return worm.jumpTime();
 	}
 
 	@Override
 	public double[] getJumpStep(Worm worm, double t) {
-		// TODO Auto-generated method stub
-		return null;
+		Position newPosition = worm.jumpStep(t); //TODO: We left out the IllegalStateException as well as negative time.
+		double[] position = { newPosition.getX(), newPosition.getY() };
+		
+		return position;
 	}
 
 	@Override
@@ -68,8 +71,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public double getOrientation(Worm worm) {
-		// TODO Auto-generated method stub
-		return 0;
+		return worm.getAngle();
 	}
 
 	@Override
@@ -78,46 +80,45 @@ public class Facade implements IFacade {
 	}
 
 	@Override
-	public void setRadius(Worm worm, double newRadius) {
-		// TODO Auto-generated method stub
-		// TODO call worm.setMass() as well.
-		
+	public void setRadius(Worm worm, double newRadius) throws ModelException {
+		try {
+			worm.setRadius(newRadius);
+		} catch(IllegalArgumentException ex) {
+			throw new ModelException(ex.getMessage());
+		}
 	}
 
 	@Override
 	public double getMinimalRadius(Worm worm) {
-		// TODO Auto-generated method stub
-		return 0;
+		return worm.getMinimumRadius();
 	}
 
 	@Override
 	public int getActionPoints(Worm worm) {
-		// TODO Auto-generated method stub
-		return 0;
+		return worm.getCurrentActionPoints();
 	}
 
 	@Override
 	public int getMaxActionPoints(Worm worm) {
-		// TODO Auto-generated method stub
-		return 0;
+		return worm.getMaximumActionPoints();
 	}
 
 	@Override
 	public String getName(Worm worm) {
-		// TODO Auto-generated method stub
-		return null;
+		return worm.getName();
 	}
 
 	@Override
 	public void rename(Worm worm, String newName) {
-		// TODO Auto-generated method stub
-		
+		if(!Worm.isValidName(newName))
+			throw new ModelException("Illegal name.");
+			
+		worm.setName(newName);
 	}
 
 	@Override
 	public double getMass(Worm worm) {
-		// TODO Auto-generated method stub
-		return 0;
+		return worm.getMass();
 	}
 
 }
