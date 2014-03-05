@@ -3,7 +3,7 @@ package worms.model;
 import worms.util.Position;
 
 /**
- * TODO: Implement the whole class.
+ * TODO: Add our info here.
  * @author Admin
  *
  */

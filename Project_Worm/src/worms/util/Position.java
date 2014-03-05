@@ -1,7 +1,5 @@
 package worms.util;
 
-import com.sun.org.apache.xml.internal.serializer.utils.Utils;
-
 import be.kuleuven.cs.som.annotate.Basic;
 import be.kuleuven.cs.som.annotate.Immutable;
 import be.kuleuven.cs.som.annotate.Raw;
