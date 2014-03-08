@@ -10,10 +10,13 @@ import worms.util.Position;
 public class Facade implements IFacade {
 
 	@Override
-	public Worm createWorm(double x, double y, double direction, double radius,
-			String name) {
-		// TODO Auto-generated method stub
-		return null;
+	public Worm createWorm(double x, double y, double direction, double radius, String name) {
+		try {
+			Position position = new Position(x,y);
+			return new Worm(position, direction, radius, name);
+		} catch(IllegalArgumentException ex) {
+			throw new ModelException(ex.getMessage());
+		}
 	}
 
 	@Override

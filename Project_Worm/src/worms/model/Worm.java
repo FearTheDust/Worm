@@ -48,7 +48,7 @@ import worms.util.Util;
  *
  */
 public class Worm {
-	
+
 	/**
 	 * Acceleration on earth while falling.
 	 */
@@ -58,6 +58,45 @@ public class Worm {
 	 * The time the force is exerted on a worm's body. (e.g. while jumping.)
 	 */
 	public static final double FORCE_TIME = 0.5;
+	
+	
+	//TODO Implement.
+	public Worm() {
+		
+	}
+	
+	/**
+	 * TODO: Quickly made constructor for test-run, verify/add functions and add comments.
+	 * @param position
+	 * @param angle
+	 * @param radius
+	 * @param name
+	 * @param actionPoints
+	 * @throws IllegalArgumentException
+	 */
+	public Worm(Position position, double angle, double radius, String name, int actionPoints) throws IllegalArgumentException {
+		this.setPosition(position);
+		this.setAngle(angle);
+		this.setRadius(radius);
+		this.setName(name);
+		
+		this.setCurrentActionPoints(actionPoints);
+	}
+	
+	/**
+	 * Initialize this constructor with a maximum amount of action points possible for this worm.
+	 * @param position
+	 * @param angle
+	 * @param radius
+	 * @param name
+	 * @throws IllegalArgumentException
+	 */
+	public Worm(Position position, double angle, double radius, String name) throws IllegalArgumentException {
+		this(position, angle, radius, name, Integer.MAX_VALUE);
+	}
+	
+	
+	
 	
 	/**
 	 * Returns the position of this worm.
@@ -98,11 +137,11 @@ public class Worm {
 	 * 			When time exceeds the time required to jump or time is a negative value.
 	 * 			| (time > this.jumpTime() || time < 0)
 	 * 
-	 * @throws IllegalStateException
+	 * @throws IllegalArgumentException	//TODO: (vraag) Do we have to mention this, possible exceptions from other functions?
 	 * 			When the calculated x- and y-coordinates aren't valid for a Position.
 	 * 			| !Position.isValidPosition(x,y)
 	 */
-	public Position jumpStep(double time) throws IllegalArgumentException, IllegalStateException {
+	public Position jumpStep(double time) throws IllegalArgumentException {
 		if(time > jumpTime())
 			throw new IllegalArgumentException("time musn't be greater than the time needed to perform the whole jump.");
 		if(time < 0)
@@ -117,10 +156,6 @@ public class Worm {
 		
 		double x = this.getPosition().getX() + (startSpeedX * time);
 		double y = this.getPosition().getY() + (startSpeedY * time - EARTH_ACCELERATION * Math.pow(time,2) / 2);
-		
-		//Verify
-		if(!Position.isValidPosition(x, y))
-			throw new IllegalStateException("The calculated position isn't a valid Position."); //TODO: (vraag) Position x and y must be >= 0 right?
 		
 		//Return
 		return new Position(x,y);
@@ -196,8 +231,7 @@ public class Worm {
 	 * 			| (steps*Math.ceil((Math.abs(Math.cos(angle)) + Math.abs(4*Math.sin(angle)))))
 	 */
 	public static int getMoveCost(int steps, double angle){
-		return (int) (steps*Math.ceil((Math.abs(Math.cos(angle))
-				+Math.abs(4*Math.sin(angle))))); //TODO: (vraag) What about X && Y boundaries?
+		return (int) (steps * Math.ceil(Math.abs(Math.cos(angle)) + Math.abs(4*Math.sin(angle))) ); //TODO: (vraag) What about X && Y boundaries?
 	}
 	
 	
@@ -258,7 +292,7 @@ public class Worm {
 	 * @return The cost to turn.
 	 */
 	public static int getTurnCost(double angle) {
-		return (int) ((60 * angle) /2*Math.PI);
+		return (int) Math.abs(Math.ceil(30 * (angle / Math.PI)));
 	}
 	
 	/**
@@ -271,7 +305,7 @@ public class Worm {
 	 * @post	The angle of this worm is equal to the given angle.
 	 * 			| (new.getAngle() == angle)
 	 */
-	public void setAngle(double angle) {
+	private void setAngle(double angle) {
 		assert (Util.fuzzyGreaterThanOrEqualTo(angle, 0) && angle < 2*Math.PI); //TODO: (vraag) invariant? isValidAngle??
 		this.angle = angle;
 	}
@@ -344,7 +378,7 @@ public class Worm {
 		/*if(this.radius >= Math.pow(Double.MAX_VALUE * (3/4) / DENSITY / Math.PI, 1/3))
 			throw new IllegalArgumentException();*/
 			
-		this.mass = getDensity() * (4/3) * Math.PI * Math.pow(this.getRadius(),3);
+		this.mass = getDensity() * (4.0/3.0) * Math.PI * Math.pow(this.getRadius(),3);
 		this.setCurrentActionPoints(this.getCurrentActionPoints());
 	}
 	
@@ -442,6 +476,7 @@ public class Worm {
 	public int getMaximumActionPoints() {
 		if(this.getMass() > Integer.MAX_VALUE)
 			return Integer.MAX_VALUE;
+		
 		
 		return (int) Math.round(this.getMass());
 	}
