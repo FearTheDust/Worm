@@ -11,7 +11,8 @@ import worms.util.Position;
 
 //TODO: Do we have to test getters?
 
-public class WormTest1 {
+//TODO: (vraag) Is it oke to create a package under src to hold our tests? The map "tests" does not get error corrected.
+public class WormTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -45,8 +46,8 @@ public class WormTest1 {
 	
 	@Test
 	public void testJump() {
-		Worm worm = new Worm(new Position(0,0), 0, 1, "Test jump from", 1);	
-		fail("Not yet implemented");
+		//Worm worm = new Worm(new Position(0,0), 0, 1, "Test jump from", 1);	
+		fail("Not yet implemented"); // TODO
 	}
 
 	@Test
@@ -64,7 +65,7 @@ public class WormTest1 {
 	@Test(expected=IllegalArgumentException.class)
 	public void testJumpStep_TooHighArgument() {
 		Worm worm = new Worm(new Position(0,0), Math.PI/4, 1, "Test JumpTime", 1);				
-		Position positionHighTime = worm.jumpStep(worm.jumpTime()+10);
+		worm.jumpStep(worm.jumpTime()+10);
 	}
 	
 	/**
@@ -73,7 +74,7 @@ public class WormTest1 {
 	@Test(expected=IllegalArgumentException.class)
 	public void testJumpStep_TooLowArgument() {
 		Worm worm = new Worm(new Position(0,0), Math.PI/4, 1, "Test JumpTime", 1);	
-		Position positionLowTime = worm.jumpStep(-1);
+		worm.jumpStep(-1);
 	}
 	
 
@@ -192,7 +193,7 @@ public class WormTest1 {
 	 * Non alphabetic letter (excl space, ' and ")
 	 * null
 	 * length < 2
-	 * Illegalcharacter \n 
+	 * Illegal character \n 
 	 */
 	@Test
 	public void testIsValidName_Illegal() {
