@@ -29,9 +29,6 @@ import worms.util.Util;
  * 
  * @author Admin
  * 
- * @invar	This worm's mass is at all times equal to the mass if we would set the mass.
- * 			| this.getMass() == this.setMass() 												//TODO: (vraag) How to describe this best?
- * 
  * @invar	This worm's action points amount is at all times less than or equal to the maximum amount.
  * 			| this.getCurrentActionPoints() <= this.getMaximumActionPoints()
  * 
@@ -44,7 +41,7 @@ import worms.util.Util;
  * @invar	This worm's angle is greater than or equal to 0 and less than 2*Math.PI
  * 			| this.getAngle() >= 0 && this.getAngle() < 2*Math.PI
  * 
- * 																						//TODO: (vraag) Double.isNaN never valid also invariant?
+ * 																	//TODO: ??(vraag) Double.isNaN never valid also invariant?
  *
  */
 public class Worm {
@@ -61,17 +58,6 @@ public class Worm {
 	
 	
 	/**
-	 * Initialize a new worm with default values.
-	 * @effect	The new worm will be initialized with a position (0,0),
-	 * 			0 as an angle, 1 as a radius, "Default worm" as its name and the maximum amount possible for the action points.
-	 * 			| this(new Position(0,0), 0, 1, "Default worm", Integer.MAX_VALUE) 
-	 * //TODO: (vraag) if we change the effect of the other constructor, these comments are wrong, so are we allowed to be more vague about the effect? as in see OTHER_METHOD.
-	 */
-	public Worm() {
-		this(new Position(0,0), 0, 1, "Default worm");
-	}
-	
-	/**
 	 * Initialize a new worm with a certain position, angle, radius, name and amount of action points.
 	 * 
 	 * @param position The position of the new worm.
@@ -81,7 +67,7 @@ public class Worm {
 	 * @param actionPoints The amount of action points for the new worm.
 	 * 
 	 * @effect	The position of the new worm is set to position.
-	 * 			| this.setPosition(position) //TODO: (vraag) this or new?
+	 * 			| this.setPosition(position) //TODO: ??(vraag) this or new?
 	 * 
 	 * @effect	The angle of the new worm is set to angle.
 	 * 			| this.setAngle(angle)
@@ -100,7 +86,7 @@ public class Worm {
 	 * @throws NullPointerException
 	 */
 	public Worm(Position position, double angle, double radius, String name, int actionPoints) throws IllegalArgumentException, NullPointerException {
-		this.setPosition(position); //TODO: (vraag) Do we have to mention in the comments when a used method can throw an exception?
+		this.setPosition(position); //TODO: ??(vraag) Do we have to mention in the comments when a used method can throw an exception?
 									//TODO: (vraag) As in, do we have to describe that this constructor will throw nullPointer when position is null cause of setPosition.
 		this.setAngle(angle);		//same question here
 		this.setRadius(radius);		//and here
@@ -205,9 +191,9 @@ public class Worm {
 	 * 			| time = distance / (startSpeed * Math.cos(this.getAngle()))
 	 * 			| result == time
 	 */
-	public double jumpTime() { //TODO: (vraag) OverFlow handling??
+	public double jumpTime() { //TODO: ??(vraag) checking isNaN??
 		//this.getAngle() will automatically be less than 2*Math.PI because of the invariant.
-		if(Util.fuzzyGreaterThanOrEqualTo(this.getAngle(), Math.PI)) { //TODO: (vraag) Should we really be able to jump when AP = 0?
+		if(Util.fuzzyGreaterThanOrEqualTo(this.getAngle(), Math.PI)) { //TODO: ??(vraag) Should we really be able to jump when AP = 0?
 			return 0;
 		}
 
@@ -247,7 +233,7 @@ public class Worm {
 		double x= this.getPosition().getX() + steps*Math.cos(getAngle())*getRadius();
 		double y= this.getPosition().getY() + steps*Math.sin(getAngle())*getRadius();
 		
-		setPosition(new Position(x,y)); //TODO: (vraag) What about negative values? Do X && Y have boundaries?
+		setPosition(new Position(x,y)); //TODO: ??(vraag) What about negative values? Do X && Y have boundaries?
 		
 		int actionPoints=getCurrentActionPoints()-getMoveCost(steps,getAngle());
 		setCurrentActionPoints(actionPoints);
@@ -263,7 +249,7 @@ public class Worm {
 	 * 			| (steps*Math.ceil((Math.abs(Math.cos(angle)) + Math.abs(4*Math.sin(angle)))))
 	 */
 	public static int getMoveCost(int steps, double angle){
-		return (int) (steps * Math.ceil(Math.abs(Math.cos(angle)) + Math.abs(4*Math.sin(angle))) ); //TODO: (vraag) What about X && Y boundaries?
+		return (int) (steps * Math.ceil(Math.abs(Math.cos(angle)) + Math.abs(4*Math.sin(angle))) );
 	}
 	
 	
@@ -300,8 +286,8 @@ public class Worm {
 	 * Turn this worm with a given angle.
 	 * @param angle The angle to turn.
 	 * 
-	 * @pre		The angle must be between -2*Math.PI and 2*Math.PI
-	 * 			| (angle > -2*Math.PI && angle < 2*Math.PI) 					//TODO: (vraag) isValidAngle(Math.abs) && isValidAngle() ...????
+	 * @pre		The absolute value of the angle must be valid.
+	 * 			| isValidAngle(Math.abs(angle)) 			
 	 * @pre		The cost to turn should be less or equal to the amount we have.
 	 * 			| this.getCurrentActionPoints() >= getTurnCost(angle)
 	 * 
@@ -311,10 +297,10 @@ public class Worm {
 	 * 			| new.getAngle() = this.getAngle() + angle
 	 */
 	public void turn(double angle) {
-		assert (angle > -2*Math.PI && angle < 2*Math.PI);
+		assert isValidAngle(Math.abs(angle)); //TODO: ??(vraag) asserts testen in Testfile? tussen -360 en 360 of tussen -180 en 180
 		assert this.getCurrentActionPoints() >= getTurnCost(angle);
 		
-		this.setAngle(this.getAngle() + angle);
+		this.setAngle((this.getAngle() + angle) % 2*Math.PI);
 		this.setCurrentActionPoints(this.getCurrentActionPoints() - getTurnCost(angle));
 	}
 	
@@ -328,19 +314,30 @@ public class Worm {
 	}
 	
 	/**
+	 * The angle provided has to be greater than or equal to 0 and less than 2*Math.PI.
+	 * @param angle The angle to check.
+	 * @return Whether or not the given angle is valid.
+	 */
+	public static boolean isValidAngle(double angle){
+		return (Util.fuzzyGreaterThanOrEqualTo(angle, 0) && angle<2*Math.PI);
+	}
+	
+	/**
 	 * Set the new angle of this worm.
 	 * @param angle The new angle of this worm.
 	 * 
-	 * @pre		The angle provided has to be greater than or equal to 0 and less than 2*Math.PI.
-	 * 			| (angle >= 0 && angle < 2*Math.PI)
+	 * @pre		The angle provided has to be a valid angle.
+	 * 			| isValidAngle(angle)
 	 * 
 	 * @post	The angle of this worm is equal to the given angle.
 	 * 			| (new.getAngle() == angle)
 	 */
 	private void setAngle(double angle) {
-		assert (Util.fuzzyGreaterThanOrEqualTo(angle, 0) && angle < 2*Math.PI); //TODO: (vraag) invariant? isValidAngle??
+		assert isValidAngle(angle); //TODO: invariant
 		this.angle = angle;
 	}
+	
+	
 	
 	private double angle;
 	
@@ -374,7 +371,7 @@ public class Worm {
 			throw new IllegalArgumentException("The radius has to be greater than or equal to the minimum radius " + minRadius);
 		
 		this.radius = radius;
-		this.setMass();
+		this.setCurrentActionPoints(this.getCurrentActionPoints());
 	}
 	
 	/**
@@ -394,25 +391,25 @@ public class Worm {
 	 */
 	@Basic
 	public double getMass() {
-		return mass;
+		return getDensity() * (4.0/3.0) * Math.PI * Math.pow(this.getRadius(),3);
 	}
 	
-	/**
-	 * Sets the mass of this worm.
-	 * @post	The mass of this worm is equal to the result of the formula "Mass = (getDensity()) * (4/3) * Math.PI * (radius)^3"
-	 * 			| new.getMass() == getDensity() * (4/3) * Math.PI * Math.pow(this.getRadius(),3)
-	 * 
-	 * @post	see setCurrentActionPoints(this.getCurrentActionPoints()) //TODO: (vraag) @effect?
-	 */
-	@Raw
-	private void setMass() /*throws IllegalArgumentException*/ {//TODO: (vraag) Do we have to check possible overFlow?
-		//We'd better use an argument if we use this...
-		/*if(this.radius >= Math.pow(Double.MAX_VALUE * (3/4) / DENSITY / Math.PI, 1/3))
-			throw new IllegalArgumentException();*/
-			
-		this.mass = getDensity() * (4.0/3.0) * Math.PI * Math.pow(this.getRadius(),3);
-		this.setCurrentActionPoints(this.getCurrentActionPoints());
-	}
+//	/**
+//	 * Sets the mass of this worm.
+//	 * @post	The mass of this worm is equal to the result of the formula "Mass = (getDensity()) * (4/3) * Math.PI * (radius)^3"
+//	 * 			| new.getMass() == getDensity() * (4/3) * Math.PI * Math.pow(this.getRadius(),3)
+//	 * 
+//	 * @post	see setCurrentActionPoints(this.getCurrentActionPoints()) //TODO: @effect?
+//	 */
+//	@Raw
+//	private void setMass() /*throws IllegalArgumentException*/ {
+//		//We'd better use an argument if we use this...
+//		/*if(this.radius >= Math.pow(Double.MAX_VALUE * (3/4) / DENSITY / Math.PI, 1/3))
+//			throw new IllegalArgumentException();*/
+//			
+//		this.mass = getDensity() * (4.0/3.0) * Math.PI * Math.pow(this.getRadius(),3);
+//		this.setCurrentActionPoints(this.getCurrentActionPoints());
+//	}
 	
 	/**
 	 * Returns this worm's density.
@@ -422,7 +419,7 @@ public class Worm {
 		return DENSITY;
 	}
 	
-	private double mass;
+//	private double mass;
 	private static final double DENSITY = 1062;
 	
 	

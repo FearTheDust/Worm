@@ -16,6 +16,7 @@ import be.kuleuven.cs.som.annotate.Raw;
  *  
  */
 
+//TODO: implement equals
 public class Position {
 	
 	/**
