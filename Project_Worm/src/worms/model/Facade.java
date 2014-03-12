@@ -14,7 +14,8 @@ public class Facade implements IFacade {
 		try {
 			Position position = new Position(x,y);
 			return new Worm(position, direction, radius, name);
-		} catch(IllegalArgumentException ex) {
+			
+		} catch(NullPointerException | IllegalArgumentException ex) {
 			throw new ModelException(ex.getMessage());
 		}
 	}
@@ -113,7 +114,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public void rename(Worm worm, String newName) {
-		if(!Worm.isValidName(newName))
+		if(!Worm.isValidName(newName)) //We prefer to make the check instead of using try-catch as try-catch costs more and the chance the exception happens should be small.
 			throw new ModelException("Illegal name.");
 			
 		worm.setName(newName);

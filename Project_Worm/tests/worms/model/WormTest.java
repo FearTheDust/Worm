@@ -12,9 +12,6 @@ import org.junit.Test;
 import worms.model.Worm;
 import worms.util.Position;
 
-//TODO: ??(vraag) Do we have to test getters?
-
-//TODO: ??(vraag) Is it oke to create a package under src to hold our tests? The map "tests" does not get error corrected.
 public class WormTest {
 
 	@BeforeClass

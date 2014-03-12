@@ -1,23 +1,18 @@
 package worms.util;
-
-import be.kuleuven.cs.som.annotate.Basic;
-import be.kuleuven.cs.som.annotate.Immutable;
-import be.kuleuven.cs.som.annotate.Raw;
+import be.kuleuven.cs.som.annotate.*;
 
 /**
  * 
- * A class representing a position in a 2 dimensional space, represented by 2 coordinates.
+ * A class representing a position in a 2 dimensional space, represented by 2 coordinates x and y.
  * 
- * @invar 	The x- and y-coordinates are always valid.
- * 			| isValidPosition(this.getX(), this.getY())
+ * @invar 	The x- or y-coordinates are never "Not a Number".
+ * 			| !Double.isNaN(this.getX()) && !Double.isNan(this.getY())
  * 
  *  @author Admin
- *  @version 1.0
+ *  @version 1.1
  *  
  */
 
-//TODO: implement equals
-//TODO: Get rid off x/y negative boundary
 public class Position {
 	
 	/**
@@ -33,25 +28,15 @@ public class Position {
 	 * 
 	 * @throws	IllegalArgumentException
 	 * 			When x- or y-coordinate aren't valid coordinates.
-	 * 			| !isValidPosition(x,y)
+	 * 			| Double.isNaN(x) || Double.isNaN(y)
 	 */
 	@Raw
 	public Position(double x, double y) throws IllegalArgumentException {
-		if(!isValidPosition(x,y))
-			throw new IllegalArgumentException("A negative Coordinate is not allowed.");
+		if(Double.isNaN(x) || Double.isNaN(y))
+			throw new IllegalArgumentException("A coordinate was Not a Number.");
+		
 		this.x = x;
 		this.y = y;
-	}
-	
-	/**
-	 * Check whether the x and y given are valid arguments for a position.
-	 * @param x The x-coordinate to check.
-	 * @param y The y-coordinate to check.
-	 * 
-	 * @return True if and only if the given x and y are both greater than or equal to 0.
-	 */
-	public static boolean isValidPosition(double x, double y) {
-		return (Util.fuzzyGreaterThanOrEqualTo(x, 0) && Util.fuzzyGreaterThanOrEqualTo(y,0));
 	}
 	
 	/**
@@ -76,6 +61,15 @@ public class Position {
 
 	private final double y;
 	
+	
+	@Override
+	public boolean equals(Object otherObject) {
+		if(otherObject instanceof Position) {
+			Position otherPosition = (Position) otherObject;
+			return (this.getX() == otherPosition.getX() && this.getY() == otherPosition.getY());
+		}
+		return false;
+	}
 	
 	
 

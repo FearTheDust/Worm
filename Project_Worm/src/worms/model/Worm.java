@@ -23,7 +23,6 @@ import worms.util.Util;
 
 //TODO: Check access modifiers and modify them to the most suited one.
 //TODO: Check invariants
-//TODO: Add constructors + add to Facade
 
 /**
  * 
@@ -41,8 +40,11 @@ import worms.util.Util;
  * @invar	This worm's angle is greater than or equal to 0 and less than 2*Math.PI
  * 			| this.getAngle() >= 0 && this.getAngle() < 2*Math.PI
  * 
- * 																	//TODO: ??(vraag) Double.isNaN never valid also invariant?  yup
+ * @invar	No double will have the value of "Not A Number" and neither will any double returning function return it.
+ *				//TODO: Formally as well?
+ *				//TODO: Implement checks in the code for this checking.
  *
+ *	//TODO: Use Util.fuzzy.. where possible.
  */
 public class Worm {
 
@@ -82,16 +84,12 @@ public class Worm {
 	 * 			in which case the action points amount will be set to the maximum.
 	 * 			| this.setCurrentActionPoints(actionPoints)
 	 * 
-	 * @throws IllegalArgumentException //TODO: leave out
-	 * @throws NullPointerException
 	 */
-	public Worm(Position position, double angle, double radius, String name, int actionPoints) throws IllegalArgumentException, NullPointerException {
-		this.setPosition(position); //TODO: ??(vraag) Do we have to mention in the comments when a used method can throw an exception?
-									//TODO: (vraag) As in, do we have to describe that this constructor will throw nullPointer when position is null cause of setPosition.
-		this.setAngle(angle);		//same question here
-		this.setRadius(radius);		//and here
-		this.setName(name);			//and here
-		
+	public Worm(Position position, double angle, double radius, String name, int actionPoints) {
+		this.setPosition(position); //TODO: Test for Nullpointer throwing
+		this.setAngle(angle);
+		this.setRadius(radius);
+		this.setName(name);
 		this.setCurrentActionPoints(actionPoints);
 	}
 	
@@ -106,11 +104,9 @@ public class Worm {
 	 * @effect	A new worm will be initialized with a position, angle, radius, name and the maximum amount of action points.
 	 * 			| this(position, angle, radius, name, Integer.MAX_VALUE);
 	 * 
-	 * @throws IllegalArgumentException
-	 * @throws NullPointerException
 	 */
-	public Worm(Position position, double angle, double radius, String name) throws IllegalArgumentException, NullPointerException {
-		this(position, angle, radius, name, Integer.MAX_VALUE); //TODO: same question as constructor above, whether or not we have to describe when we get NullPointerException/IllegalArgumentException...
+	public Worm(Position position, double angle, double radius, String name) {
+		this(position, angle, radius, name, Integer.MAX_VALUE);
 	}
 	
 	
@@ -126,13 +122,13 @@ public class Worm {
 	
 	/**
 	 * This worm jumps to a certain position.
-	 * @post
+	 * @post	The current amount of action points is drained to 0.
 	 * 			| new.getCurrentActionPoints() == 0
 	 * 
 	 * @effect The new position of this worm is calculated and set.
 	 * 			| this.setPosition(this.jumpStep(this.jumpTime()))
 	 */
-	public void jump() throws IllegalStateException {
+	public void jump() {
 		this.setPosition(this.jumpStep(this.jumpTime()));
 		this.setCurrentActionPoints(0);
 	}
@@ -140,8 +136,10 @@ public class Worm {
 	
 	/**
 	 * Returns the position where this worm would be at a certain time whilst jumping.
-	 * @param time The time of which we return the position.
-	 * @return The position this worm has at a certain time in a jump.
+	 * 
+	 * @param time The time of when we return the position.
+	 * @return The position this worm has at a certain time in a jump when time isn't equal to zero.
+	 * 			| if(time != 0) Then
 	 * 			| force = 5 * this.getCurrentActionPoints() + this.getMass() * EARTH_ACCELERATION
 	 * 			| startSpeed = (force / this.getMass()) * FORCE_TIME
 	 * 			| startSpeedX = startSpeed * Math.cos(this.getAngle())
@@ -151,19 +149,29 @@ public class Worm {
 	 * 			| y = this.getPosition().getY() + (startSpeedY * time - EARTH_ACCELERATION * Math.pow(time,2) / 2)
 	 * 			| result == new Position(x,y)
 	 * 
+	 * @return	When the time equals 0, the current position will be returned.
+	 * 			| if(time == 0) Then
+	 * 			| result == this.getPosition();
+	 * 
 	 * @throws IllegalArgumentException
 	 * 			When time exceeds the time required to jump or time is a negative value.
 	 * 			| (time > this.jumpTime() || time < 0)
 	 * 
-	 * @throws IllegalArgumentException	//TODO: (vraag) Do we have to mention this, possible exceptions from other functions?
-	 * 			When the calculated x- and y-coordinates aren't valid for a Position.
-	 * 			| !Position.isValidPosition(x,y)
 	 */
 	public Position jumpStep(double time) throws IllegalArgumentException {
-		if(time > jumpTime())
-			throw new IllegalArgumentException("time musn't be greater than the time needed to perform the whole jump.");
+		if(! Util.fuzzyLessThanOrEqualTo(time, jumpTime()))
+			throw new IllegalArgumentException("The time musn't be greater than the time needed to perform the whole jump. Time: " + time + " and jumpTime: " + jumpTime());
 		if(time < 0)
-			throw new IllegalArgumentException("time musn't be less than zero.");
+			throw new IllegalArgumentException("The time musn't be less negative.");
+
+		if(time == 0) {
+			return this.getPosition();
+		}
+		
+		if(Util.fuzzyGreaterThanOrEqualTo(this.getAngle(), Math.PI)) { //TODO: If we change from 0 - 360 to -180 -> 180 we have to change this as well.
+			return this.getPosition();
+		}
+		
 		
 		//Calculation
 		double force = 5 * this.getCurrentActionPoints() + this.getMass() * EARTH_ACCELERATION;
@@ -233,7 +241,7 @@ public class Worm {
 		double x= this.getPosition().getX() + steps*Math.cos(getAngle())*getRadius();
 		double y= this.getPosition().getY() + steps*Math.sin(getAngle())*getRadius();
 		
-		setPosition(new Position(x,y)); //TODO: ??(vraag) What about negative values? Do X && Y have boundaries? nope
+		setPosition(new Position(x,y));
 		
 		int actionPoints=getCurrentActionPoints()-getMoveCost(steps,getAngle());
 		setCurrentActionPoints(actionPoints);
@@ -297,10 +305,10 @@ public class Worm {
 	 * 			| new.getAngle() = this.getAngle() + angle
 	 */
 	public void turn(double angle) {
-		assert isValidAngle(Math.abs(angle)); //TODO: -180 en 180
+		assert isValidAngle(Math.abs(angle)); //TODO: -180 en 180 => abs(angle*2) ?
 		assert this.getCurrentActionPoints() >= getTurnCost(angle);
 		
-		this.setAngle((this.getAngle() + angle) % 2*Math.PI);
+		this.setAngle((this.getAngle() + angle) % Math.PI); //TODO: 360 of 180?
 		this.setCurrentActionPoints(this.getCurrentActionPoints() - getTurnCost(angle));
 	}
 	
@@ -319,7 +327,7 @@ public class Worm {
 	 * @return Whether or not the given angle is valid.
 	 */
 	public static boolean isValidAngle(double angle){
-		return (Util.fuzzyGreaterThanOrEqualTo(angle, 0) && angle<2*Math.PI);
+		return (Util.fuzzyGreaterThanOrEqualTo(angle, -Math.PI) && Util.fuzzyLessThanOrEqualTo(angle,Math.PI)); //TODO: Presenteren we angle als  0 -> 360 of -180 -> 180
 	}
 	
 	/**
@@ -333,11 +341,9 @@ public class Worm {
 	 * 			| (new.getAngle() == angle)
 	 */
 	private void setAngle(double angle) {
-		assert isValidAngle(angle); //TODO: invariant
+		assert isValidAngle(angle % Math.PI); //TODO: invariant
 		this.angle = angle;
 	}
-	
-	
 	
 	private double angle;
 	
@@ -367,7 +373,7 @@ public class Worm {
 	 */
 	@Model
 	public void setRadius(double radius) throws IllegalArgumentException {
-		if(radius < getMinimumRadius())
+		if(! Util.fuzzyGreaterThanOrEqualTo(radius, getMinimumRadius()))
 			throw new IllegalArgumentException("The radius has to be greater than or equal to the minimum radius " + minRadius);
 		
 		this.radius = radius;
@@ -383,7 +389,7 @@ public class Worm {
 	}
 	
 	private double radius;
-	private final double minRadius = 0.25; //TODO: Initialize in constructor
+	private final double minRadius = 0.25; //Initialize in constructor later on.
 	
 	
 	/**
@@ -399,7 +405,7 @@ public class Worm {
 //	 * @post	The mass of this worm is equal to the result of the formula "Mass = (getDensity()) * (4/3) * Math.PI * (radius)^3"
 //	 * 			| new.getMass() == getDensity() * (4/3) * Math.PI * Math.pow(this.getRadius(),3)
 //	 * 
-//	 * @post	see setCurrentActionPoints(this.getCurrentActionPoints()) //TODO: @effect?
+//	 * @post	see setCurrentActionPoints(this.getCurrentActionPoints()) //@effect?
 //	 */
 //	@Raw
 //	private void setMass() /*throws IllegalArgumentException*/ {
@@ -445,7 +451,7 @@ public class Worm {
 	@Raw
 	public void setName(String name) throws IllegalArgumentException {
 		if (!isValidName(name))
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException("Invalid name.");
 		
 		this.name = name;
 	}
@@ -484,7 +490,7 @@ public class Worm {
 	 * 
 	 * @post	If actionPoints is greater than the maximum allowed the maximum will be set.
 	 * 			If actionPoints is less than or equal to the maximum allowed, the current action points will be set to actionPoints. 
-	 * 			| new.getCurrentActionPoints() == (actionPoints > this.getMaxActionPoints()) ? this.getMaxActionPoints() : actionPoints;
+	 * 			| new.getCurrentActionPoints() == (actionPoints > this.getMaxActionPoints()) ? this.getMaxActionPoints() : actionPoints
 	 */
 	@Raw @Model
 	private void setCurrentActionPoints(int actionPoints) {
@@ -505,7 +511,6 @@ public class Worm {
 	public int getMaximumActionPoints() {
 		if(this.getMass() > Integer.MAX_VALUE)
 			return Integer.MAX_VALUE;
-		
 		
 		return (int) Math.round(this.getMass());
 	}
