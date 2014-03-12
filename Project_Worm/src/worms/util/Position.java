@@ -17,6 +17,7 @@ import be.kuleuven.cs.som.annotate.Raw;
  */
 
 //TODO: implement equals
+//TODO: Get rid off x/y negative boundary
 public class Position {
 	
 	/**

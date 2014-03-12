@@ -21,7 +21,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public boolean canMove(Worm worm, int nbSteps) {
-		//TODO: ??(vraag) Do they mean it can't be a negative value or do they mean us to check the actionPoints?
+		//TODO: do they mean us to check the actionPoints
 		return false;
 	}
 

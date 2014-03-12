@@ -41,7 +41,7 @@ import worms.util.Util;
  * @invar	This worm's angle is greater than or equal to 0 and less than 2*Math.PI
  * 			| this.getAngle() >= 0 && this.getAngle() < 2*Math.PI
  * 
- * 																	//TODO: ??(vraag) Double.isNaN never valid also invariant?
+ * 																	//TODO: ??(vraag) Double.isNaN never valid also invariant?  yup
  *
  */
 public class Worm {
@@ -67,7 +67,7 @@ public class Worm {
 	 * @param actionPoints The amount of action points for the new worm.
 	 * 
 	 * @effect	The position of the new worm is set to position.
-	 * 			| this.setPosition(position) //TODO: ??(vraag) this or new?
+	 * 			| this.setPosition(position)
 	 * 
 	 * @effect	The angle of the new worm is set to angle.
 	 * 			| this.setAngle(angle)
@@ -82,7 +82,7 @@ public class Worm {
 	 * 			in which case the action points amount will be set to the maximum.
 	 * 			| this.setCurrentActionPoints(actionPoints)
 	 * 
-	 * @throws IllegalArgumentException
+	 * @throws IllegalArgumentException //TODO: leave out
 	 * @throws NullPointerException
 	 */
 	public Worm(Position position, double angle, double radius, String name, int actionPoints) throws IllegalArgumentException, NullPointerException {
@@ -191,9 +191,9 @@ public class Worm {
 	 * 			| time = distance / (startSpeed * Math.cos(this.getAngle()))
 	 * 			| result == time
 	 */
-	public double jumpTime() { //TODO: ??(vraag) checking isNaN??
+	public double jumpTime() { //TODO: checking isNaN --> exception
 		//this.getAngle() will automatically be less than 2*Math.PI because of the invariant.
-		if(Util.fuzzyGreaterThanOrEqualTo(this.getAngle(), Math.PI)) { //TODO: ??(vraag) Should we really be able to jump when AP = 0?
+		if(Util.fuzzyGreaterThanOrEqualTo(this.getAngle(), Math.PI)) {
 			return 0;
 		}
 
@@ -233,7 +233,7 @@ public class Worm {
 		double x= this.getPosition().getX() + steps*Math.cos(getAngle())*getRadius();
 		double y= this.getPosition().getY() + steps*Math.sin(getAngle())*getRadius();
 		
-		setPosition(new Position(x,y)); //TODO: ??(vraag) What about negative values? Do X && Y have boundaries?
+		setPosition(new Position(x,y)); //TODO: ??(vraag) What about negative values? Do X && Y have boundaries? nope
 		
 		int actionPoints=getCurrentActionPoints()-getMoveCost(steps,getAngle());
 		setCurrentActionPoints(actionPoints);
@@ -297,7 +297,7 @@ public class Worm {
 	 * 			| new.getAngle() = this.getAngle() + angle
 	 */
 	public void turn(double angle) {
-		assert isValidAngle(Math.abs(angle)); //TODO: ??(vraag) asserts testen in Testfile? tussen -360 en 360 of tussen -180 en 180
+		assert isValidAngle(Math.abs(angle)); //TODO: -180 en 180
 		assert this.getCurrentActionPoints() >= getTurnCost(angle);
 		
 		this.setAngle((this.getAngle() + angle) % 2*Math.PI);
