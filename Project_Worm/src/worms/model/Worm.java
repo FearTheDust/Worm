@@ -22,15 +22,14 @@ import worms.util.Util;
  */
 
 //TODO: Check access modifiers and modify them to the most suited one.
-//TODO: Check invariants
 
 /**
  * 
  * @author Derkinderen Vincent 
  * @author Coosemans Brent
  * 
- * @invar	This worm's action points amount is at all times less than or equal to the maximum amount.
- * 			| this.getCurrentActionPoints() <= this.getMaximumActionPoints()
+ * @invar	This worm's action points amount is at all times less than or equal to the maximum amount and greater than or equal to 0.
+ * 			| 0 <= this.getCurrentActionPoints() <= this.getMaximumActionPoints()
  * 
  * @invar	| This worm's name is at all times a valid name.
  * 			| isValidName(this.getName())
@@ -43,9 +42,7 @@ import worms.util.Util;
  * 
  * @invar	No double will have the value of "Not A Number" and neither will any double returning function return it.
  *			| !Double.isNaN(...)
- *				//TODO: Implement checks in the code for this checking.
  *
- *	//TODO: Use Util.fuzzy.. where possible.
  */
 public class Worm {
 
@@ -73,8 +70,8 @@ public class Worm {
 	 * 			In the case the amount of action points is greater than the maximum allowed amount the amount will be set to that maximum.
 	 * 			| this(position, angle, radius, name);
 	 * 			| this.setCurrentActionPoints(actionPoints)
-	 * 
 	 */
+	@Raw
 	public Worm(Position position, double angle, double radius, String name, int actionPoints) {
 		this(position, angle, radius, name);
 		this.setCurrentActionPoints(actionPoints);
@@ -88,9 +85,20 @@ public class Worm {
 	 * @param radius The radius of the new worm.
 	 * @param name The name of the new worm.
 	 * 
-	 * @effect	A new worm will be initialized with a position, angle, radius, name and the maximum amount of action points.
-	 * 			| this(position, angle, radius, name, Integer.MAX_VALUE);
+	 * @post	The position of the new worm is equal to position.
+	 * 			| new.getPosition().equals(position)
 	 * 
+	 * @post	The angle of the new worm is equal to angle.
+	 * 			| new.getAngle() == angle
+	 * 
+	 * @post	The radius of the new worm is equal to radius.
+	 * 			| new.getRadius() == radius
+	 * 
+	 * @post	The name of the new worm is equal to name.
+	 * 			| new.getName() == name
+	 * 
+	 * @post	The current amount of action points for the new worm is equal to the maximum amount possible for the new worm.
+	 * 			| new.getCurrentActionPoints() == new.getMaximumActionPoints()
 	 */
 	@Raw
 	public Worm(Position position, double angle, double radius, String name) {
@@ -117,7 +125,8 @@ public class Worm {
 	 * @post	The current amount of action points is drained to 0.
 	 * 			| new.getCurrentActionPoints() == 0
 	 * 
-	 * @effect The new position of this worm is calculated and set.
+	 * @effect The new position of this worm is calculated and set if the current angle isn't greater than or equal to Math.PI and isn't equal to 0.
+	 * 			| if(!Util.fuzzyGreaterThanOrEqualTo(this.getAngle(), Math.PI) && !Util.fuzzyEquals(this.getAngle(), 0)) Then
 	 * 			| this.setPosition(this.jumpStep(this.jumpTime()))
 	 */
 	public void jump() {
@@ -132,6 +141,7 @@ public class Worm {
 	 * Returns the position where this worm would be at a certain time whilst jumping.
 	 * 
 	 * @param time The time of when we return the position.
+	 * 
 	 * @return The position this worm has at a certain time in a jump when time isn't equal to zero.
 	 * 			| if(time != 0) Then
 	 * 			| force = 5 * this.getCurrentActionPoints() + this.getMass() * EARTH_ACCELERATION
@@ -157,7 +167,7 @@ public class Worm {
 			throw new IllegalArgumentException("The time musn't be greater than the time needed to perform the whole jump. Time: " + time + " and jumpTime: " + jumpTime());
 		if(time < 0)
 			throw new IllegalArgumentException("The time musn't be less negative.");
-
+		
 		if(time == 0) {
 			return this.getPosition();
 		}
@@ -165,7 +175,6 @@ public class Worm {
 		if(Util.fuzzyGreaterThanOrEqualTo(this.getAngle(), Math.PI)) {
 			return this.getPosition();
 		}
-		
 		
 		//Calculation
 		double force = 5 * this.getCurrentActionPoints() + this.getMass() * EARTH_ACCELERATION;
@@ -193,18 +202,19 @@ public class Worm {
 	 * 			| time = distance / (startSpeed * Math.cos(this.getAngle()))
 	 * 			| result == time
 	 */
-	public double jumpTime() { //TODO: checking isNaN --> exception
+	
+	public double jumpTime() {
 		//this.getAngle() will automatically be less than 2*Math.PI because of the invariant.
-		if(Util.fuzzyGreaterThanOrEqualTo(this.getAngle(), Math.PI)) {
+		if(this.getAngle() > Math.PI) {
 			return 0;
 		}
-
+		
 		//sin(2X) = 2sin(X)cos(X); so 2sin(X)cos(X)/cos(X) => 2sin(X) => return 0   => time can never be negative.
 		double force = 5 * this.getCurrentActionPoints() + this.getMass() * EARTH_ACCELERATION;
 		double startSpeed = (force / this.getMass()) * FORCE_TIME;
 		double distance = (Math.pow(startSpeed, 2) * Math.sin(2 * this.getAngle())) / EARTH_ACCELERATION;
 		double time = Math.abs(distance / (startSpeed * Math.cos(this.getAngle())));
-		
+
 		return time;
 	}
 	
@@ -288,15 +298,17 @@ public class Worm {
 	 * Turn this worm with a given angle.
 	 * @param angle The angle to turn.
 	 * 
-	 * @pre		The absolute value of the angle must be valid.
-	 * 			| isValidAngle(Math.abs(2*angle)) 			
-	 * @pre		The cost to turn should be less or equal to the amount we have.
+	 * @pre		The absolute value of twice the angle must be valid.
+	 * 			| isValidAngle(Math.abs(2*angle)) 	
+	 * 		
+	 * @pre		The cost to turn should be less than or equal to the amount of action points we have.
 	 * 			| this.getCurrentActionPoints() >= getTurnCost(angle)
 	 * 
-	 * @post	The new worm's action points is equal to the old amount minus the cost to turn.
+	 * @post	The new worm's action points is equal to the old amount of action points minus the cost to turn.
 	 * 			| new.getCurrentActionPoints() = this.getCurrentActionPoints() - getTurnCost(angle)
-	 * @post	The new angle is equal to the old angle + the given angle.
-	 * 			| new.getAngle() = this.getAngle() + angle
+	 * 
+	 * @post	The new angle is equal to the old angle plus the given angle + 2*Math.PI, modulo 2*Math.PI.
+	 * 			| new.getAngle() = Util.modulo(this.getAngle() + angle + 2*Math.PI, 2*Math.PI)
 	 */
 	public void turn(double angle) {
 		assert isValidAngle(Math.abs(2*angle));
@@ -307,7 +319,7 @@ public class Worm {
 	}
 	
 	/**
-	 * Returns the cost to move the angle.
+	 * Returns the cost to change the orientation by adding the given angle to the current orientation.
 	 * @param angle The angle to turn.
 	 * @return The cost to turn.
 	 */
@@ -331,7 +343,7 @@ public class Worm {
 	 * @pre		The angle provided has to be a valid angle.
 	 * 			| isValidAngle(angle)
 	 * 
-	 * @post	The angle of this worm is equal to the given angle.
+	 * @post	The new angle of this worm is equal to the given angle.
 	 * 			| (new.getAngle() == angle)
 	 */
 	private void setAngle(double angle) {
@@ -345,30 +357,35 @@ public class Worm {
 	/**
 	 * Returns the radius of this worm.
 	 */
-	@Basic
+	@Basic @Raw
 	public double getRadius() {
 		return radius;
 	}
 	
 	/**
-	 * Set the new radius of this worm and update the mass accordingly.
+	 * Set the new radius of this worm and update the actionPoints accordingly.
+	 * Updating the action points means when the maximum amount of action points gets lower than our current amount our current amount will get to be equal to it.
 	 * @param radius
 	 * 			The new radius of this worm.
 	 * 
 	 * @post	The radius of this worm is equal to the given radius.
 	 * 			| new.getRadius() == radius
 	 * 
-	 * @effect	The mass of this worm will be updated accordingly.
-	 * 			| this.setMass()
-	 * 
 	 * @throws IllegalArgumentException
 	 * 			When the given radius is less than the minimum radius.
 	 * 			| radius < this.getMinimumRadius()
+	 * 
+	 * @throws IllegalArgumentException
+	 * 			When the radius isn't a number.
+	 * 			| Double.isNaN(radius)
+	 * 
 	 */
-	@Model
+	@Raw
 	public void setRadius(double radius) throws IllegalArgumentException {
 		if(! Util.fuzzyGreaterThanOrEqualTo(radius, getMinimumRadius()))
 			throw new IllegalArgumentException("The radius has to be greater than or equal to the minimum radius " + minRadius);
+		if(Double.isNaN(radius))
+			throw new IllegalArgumentException("The radius must be a number.");
 		
 		this.radius = radius;
 		this.setCurrentActionPoints(this.getCurrentActionPoints());
@@ -485,10 +502,17 @@ public class Worm {
 	 * @post	If actionPoints is greater than the maximum allowed the maximum will be set.
 	 * 			If actionPoints is less than or equal to the maximum allowed, the current action points will be set to actionPoints. 
 	 * 			| new.getCurrentActionPoints() == (actionPoints > this.getMaxActionPoints()) ? this.getMaxActionPoints() : actionPoints
+	 * 
+	 * @post	If the actionPoints is less than zero, zero will be set.
+	 * 			| if(actionPoints < 0)
+	 * 			| new.getCurrentActionPoints() == 0
 	 */
 	@Raw @Model
 	private void setCurrentActionPoints(int actionPoints) {
 		this.currentActionPoints = (actionPoints > getMaximumActionPoints()) ? getMaximumActionPoints() : actionPoints;
+		
+		if(actionPoints < 0)
+			this.currentActionPoints = 0;
 	}
 	
 	/**
