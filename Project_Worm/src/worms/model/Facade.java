@@ -41,9 +41,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public void turn(Worm worm, double angle) { //TODO: Tests
-		System.out.println("First angle:" + angle); //TODO: delete debug messages
 		angle %= 2*Math.PI;
-		System.out.println("Modulo:" + angle);
 		
 		if(angle < -Math.PI) {
 			angle += 2*Math.PI;
@@ -51,7 +49,6 @@ public class Facade implements IFacade {
 			angle -= 2*Math.PI;
 		}
 		
-		System.out.println("Perform turn we're between -1.5707963 and 1,5707963 and it's: " + angle);
 		worm.turn(angle);
 	}
 

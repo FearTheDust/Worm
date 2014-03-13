@@ -1,12 +1,9 @@
 package worms.model;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import worms.model.Facade;
-import worms.model.ModelException;
-import worms.model.Worm;
 import worms.util.Util;
 
 public class PartialFacadeTest {
@@ -42,10 +39,14 @@ public class PartialFacadeTest {
 		assertEquals(5, facade.getY(worm), EPS);
 	}
 
-	@Test(expected = ModelException.class)
+	@Test
 	public void testJumpException() {
 		Worm worm = facade.createWorm(0, 0, 3 * Math.PI / 2, 1, "Test");
+		int OldAP=facade.getActionPoints(worm);
 		facade.jump(worm);
+		assertEquals(facade.getActionPoints(worm),OldAP);
+		assertEquals(facade.getX(worm),0,0);
+		assertEquals(facade.getY(worm),0,0);
 	}
 
 }

@@ -32,14 +32,14 @@ import worms.util.Util;
  * @invar	This worm's action points amount is at all times less than or equal to the maximum amount.
  * 			| this.getCurrentActionPoints() <= this.getMaximumActionPoints()
  * 
- * @invar	| This worm's name is at all times a valid name or equal to an empty String.
- * 			| this.getName().equals("") || isValidName(this.getName())
+ * @invar	| This worm's name is at all times a valid name.
+ * 			| isValidName(this.getName())
  * 
  * @invar	This worm's radius is at all times equal to or higher than the minimum radius.
  * 			| this.getRadius() >= this.getMinimumRadius()
  * 
- * @invar	This worm's angle is greater than or equal to 0 and less than 2*Math.PI.
- * 			| this.getAngle() >= 0 && this.getAngle() < 2*Math.PI
+ * @invar	This worm's angle is at all times a valid angle.
+ * 			| isValidAngle(this.getAngle())
  * 
  * @invar	No double will have the value of "Not A Number" and neither will any double returning function return it.
  *			| !Double.isNaN(...)
@@ -88,22 +88,11 @@ public class Worm {
 	 * @param radius The radius of the new worm.
 	 * @param name The name of the new worm.
 	 * 
-	 * @effect	The position of the new worm is set to position.
-	 * 			| this.setPosition(position)
-	 * 
-	 * @effect	The angle of the new worm is set to angle.
-	 * 			| this.setAngle(angle)
-	 * 
-	 * @effect	The radius of the new worm is set to radius.
-	 * 			| this.setRadius(radius)
-	 * 
-	 * @effect	The name of the new worm is set to name.
-	 * 			| this.setName(name)
-	 * 
-	 * @effect	The amount of current action points of the new worm will be set to the maximum possible for this worm.
-	 * 			| this.setCurrentActionPoints(this.getMaximumActionPoints())
+	 * @effect	A new worm will be initialized with a position, angle, radius, name and the maximum amount of action points.
+	 * 			| this(position, angle, radius, name, Integer.MAX_VALUE);
 	 * 
 	 */
+	@Raw
 	public Worm(Position position, double angle, double radius, String name) {
 		this.setPosition(position);
 		this.setAngle(angle);
@@ -132,8 +121,10 @@ public class Worm {
 	 * 			| this.setPosition(this.jumpStep(this.jumpTime()))
 	 */
 	public void jump() {
-		this.setPosition(this.jumpStep(this.jumpTime()));
-		this.setCurrentActionPoints(0);
+		if(!Util.fuzzyGreaterThanOrEqualTo(this.getAngle(), Math.PI) && !Util.fuzzyEquals(this.getAngle(), 0)) {
+			this.setPosition(this.jumpStep(this.jumpTime()));
+			this.setCurrentActionPoints(0);
+		}
 	}
 	
 	
@@ -171,7 +162,7 @@ public class Worm {
 			return this.getPosition();
 		}
 		
-		if(Util.fuzzyGreaterThanOrEqualTo(this.getAngle(), Math.PI)) { //TODO: If we change from 0 - 360 to -180 -> 180 we have to change this as well.
+		if(Util.fuzzyGreaterThanOrEqualTo(this.getAngle(), Math.PI)) {
 			return this.getPosition();
 		}
 		
@@ -298,7 +289,7 @@ public class Worm {
 	 * @param angle The angle to turn.
 	 * 
 	 * @pre		The absolute value of the angle must be valid.
-	 * 			| isValidAngle(Math.abs(angle)) 			
+	 * 			| isValidAngle(Math.abs(2*angle)) 			
 	 * @pre		The cost to turn should be less or equal to the amount we have.
 	 * 			| this.getCurrentActionPoints() >= getTurnCost(angle)
 	 * 
@@ -308,12 +299,8 @@ public class Worm {
 	 * 			| new.getAngle() = this.getAngle() + angle
 	 */
 	public void turn(double angle) {
-		assert isValidAngle(Math.abs(angle*2));
+		assert isValidAngle(Math.abs(2*angle));
 		assert this.getCurrentActionPoints() >= getTurnCost(angle);
-		
-		System.out.println("Our angle combined:" + (this.getAngle() + angle)); //TODO: Delete debug messages
-		System.out.println("set to angle: " + ((this.getAngle() + angle + 2*Math.PI) % 2*Math.PI));
-		System.out.println("Our modulo thingy: " + Util.modulo(this.getAngle() + angle + 2*Math.PI, 2*Math.PI));
 		
 		this.setAngle(Util.modulo(this.getAngle() + angle + 2*Math.PI, 2*Math.PI));
 		this.setCurrentActionPoints(this.getCurrentActionPoints() - getTurnCost(angle));
@@ -348,7 +335,7 @@ public class Worm {
 	 * 			| (new.getAngle() == angle)
 	 */
 	private void setAngle(double angle) {
-		assert isValidAngle(angle); //TODO: invariant
+		assert isValidAngle(angle);
 		this.angle = angle;
 	}
 	
