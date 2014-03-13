@@ -26,7 +26,8 @@ import worms.util.Util;
 
 /**
  * 
- * @author Admin
+ * @author Derkinderen Vincent 
+ * @author Coosemans Brent
  * 
  * @invar	This worm's action points amount is at all times less than or equal to the maximum amount.
  * 			| this.getCurrentActionPoints() <= this.getMaximumActionPoints()
