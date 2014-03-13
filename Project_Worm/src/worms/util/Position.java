@@ -63,7 +63,7 @@ public class Position {
 	
 	
 	@Override
-	public boolean equals(Object otherObject) {
+	public boolean equals(Object otherObject) { //TODO: Implement a test
 		if(otherObject instanceof Position) {
 			Position otherPosition = (Position) otherObject;
 			return (this.getX() == otherPosition.getX() && this.getY() == otherPosition.getY());

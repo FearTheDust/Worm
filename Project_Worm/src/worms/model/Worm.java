@@ -37,11 +37,11 @@ import worms.util.Util;
  * @invar	This worm's radius is at all times equal to or higher than the minimum radius.
  * 			| this.getRadius() >= this.getMinimumRadius()
  * 
- * @invar	This worm's angle is greater than or equal to 0 and less than 2*Math.PI
+ * @invar	This worm's angle is greater than or equal to 0 and less than 2*Math.PI.
  * 			| this.getAngle() >= 0 && this.getAngle() < 2*Math.PI
  * 
  * @invar	No double will have the value of "Not A Number" and neither will any double returning function return it.
- *				//TODO: Formally as well?
+ *			| !Double.isNaN(...)
  *				//TODO: Implement checks in the code for this checking.
  *
  *	//TODO: Use Util.fuzzy.. where possible.
@@ -305,10 +305,13 @@ public class Worm {
 	 * 			| new.getAngle() = this.getAngle() + angle
 	 */
 	public void turn(double angle) {
-		assert isValidAngle(Math.abs(angle)); //TODO: -180 en 180 => abs(angle*2) ?
+		assert isValidAngle(Math.abs(angle*2));
 		assert this.getCurrentActionPoints() >= getTurnCost(angle);
 		
-		this.setAngle((this.getAngle() + angle) % Math.PI); //TODO: 360 of 180?
+		System.out.println("Our angle combined:" + (this.getAngle() + angle));
+		
+		System.out.println("set to angle: " + ((this.getAngle() + angle))); // + 2*Math.PI) % 2*Math.PI
+		this.setAngle((this.getAngle() + angle)); // + 2*Math.PI) % 2*Math.PI //TODO: Tests
 		this.setCurrentActionPoints(this.getCurrentActionPoints() - getTurnCost(angle));
 	}
 	
@@ -322,12 +325,12 @@ public class Worm {
 	}
 	
 	/**
-	 * The angle provided has to be greater than or equal to 0 and less than 2*Math.PI.
+	 * The angle provided has to be greater than or equal to 0 and less than or equal to 2*Math.PI.
 	 * @param angle The angle to check.
 	 * @return Whether or not the given angle is valid.
 	 */
 	public static boolean isValidAngle(double angle){
-		return (Util.fuzzyGreaterThanOrEqualTo(angle, -Math.PI) && Util.fuzzyLessThanOrEqualTo(angle,Math.PI)); //TODO: Presenteren we angle als  0 -> 360 of -180 -> 180
+		return Util.fuzzyGreaterThanOrEqualTo(angle, 0) && Util.fuzzyLessThanOrEqualTo(angle, 2*Math.PI);
 	}
 	
 	/**
@@ -341,7 +344,7 @@ public class Worm {
 	 * 			| (new.getAngle() == angle)
 	 */
 	private void setAngle(double angle) {
-		assert isValidAngle(angle % Math.PI); //TODO: invariant
+		assert isValidAngle(angle); //TODO: invariant
 		this.angle = angle;
 	}
 	

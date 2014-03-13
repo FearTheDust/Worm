@@ -39,6 +39,16 @@ public class GameState {
 	private int nameIndex = 0;
 
 	private void createRandomWorms() {
+		double worldWidth1 = GUIUtils.pixelToMeter(width);
+		double worldHeight1 = GUIUtils.pixelToMeter(height);
+		double radius1 = 0.25 + random.nextDouble() / 4;
+		
+		double testX = -worldWidth1 / 2 + radius1 + random.nextDouble()* (worldWidth1 - 2 * radius1);
+		double testY = -worldHeight1 / 2 + radius1 + random.nextDouble() * (worldHeight1 - 2 * radius1);
+		
+		Worm worm1 = facade.createWorm(testX, testY, 0, 0.25 + 2, "Our Test Worm"); //TODO Delete
+		worms.add(worm1);
+		
 		for (int i = 0; i < wormNames.size(); i++) {
 			String name = wormNames.get(nameIndex++);
 			double radius = 0.25 + random.nextDouble() / 4;

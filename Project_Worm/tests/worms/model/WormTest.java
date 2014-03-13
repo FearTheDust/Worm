@@ -127,7 +127,8 @@ public class WormTest {
 
 	@Test
 	public void testTurn() {
-		fail("Not yet implemented"); // TODO
+		Worm worm = new Worm(new Position(0,0), 3/2 * Math.PI, 1, "Test");
+		
 	}
 
 	/**

@@ -22,8 +22,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public boolean canMove(Worm worm, int nbSteps) {
-		//TODO: do they mean us to check the actionPoints
-		return false;
+		return nbSteps < 0 && Worm.getMoveCost(nbSteps, worm.getAngle()) <= worm.getCurrentActionPoints();
 	}
 
 	@Override
@@ -41,8 +40,19 @@ public class Facade implements IFacade {
 	}
 
 	@Override
-	public void turn(Worm worm, double angle) {
-		worm.turn(angle); //TODO: Handle precondition! 180?
+	public void turn(Worm worm, double angle) { //TODO: Tests
+		System.out.println("First angle:" + angle);
+		angle %= 2*Math.PI;
+		System.out.println("Modulo:" + angle);
+		
+		if(angle < -Math.PI) {
+			angle += 2*Math.PI;
+		} else if(angle > Math.PI) {
+			angle -= 2*Math.PI;
+		}
+		
+		System.out.println("Perform turn we're between -1.5707963 and 1,5707963 and it's: " + angle);
+		worm.turn(angle);
 	}
 
 	@Override
