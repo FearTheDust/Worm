@@ -521,8 +521,4 @@ public class Worm {
 	
 	private int currentActionPoints;
 	
-	
-	
-	
-	
 }

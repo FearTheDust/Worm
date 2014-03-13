@@ -3,21 +3,55 @@ package worms.util;
 public class Util {
 	public static final double DEFAULT_EPSILON = 1e-4;
 	
-	//TODO TESTS, IMPROVE
-    public static double modulo(double a, double b) {
-    	if(b == 0)
-    		return 0;
+	
+	/**
+	 * This function replaces % with more precision.
+	 * This function returns the rest of the dividend / divisor.
+	 * 
+	 * @param dividend The dividend
+	 * @param divisor The divisor
+	 * 
+	 * @return The rest of dividend/divisor.
+	 * @return If dividend or divisor is Not a Number this returns Double.NaN
+	 * 			| if(Double.isNaN(dividend) || Double.isNaN(divisor)) then
+     *			| result == Double.NaN
+     *
+     * @return If dividend is infinite Double.NaN is returned.
+     * 			| if(Double.isInfinite(dividend)) then
+     *			| result == Double.NaN;	
+     *
+     * @return If dividend is not infinite and divisor is infinite the dividend is returned.
+     * 			| if(!Double.isInfinite(dividend) && Double.isInfinite(divisor))
+     * 			| result == dividend;
+     * 
+     * @return If divisor is 0 or 1 the dividend is returned.
+     * 			| if(Util.fuzzyEquals(divisor, 0, 1E-9) || Util.fuzzyEquals(divisor, 1, 1E-9))
+     * 			| result == dividend;
+	 */
+    public static double modulo(double dividend, double divisor) {
+    	if(Double.isNaN(dividend) || Double.isNaN(divisor))
+    		return Double.NaN;
     	
-    	while(Math.abs(a / b) >= 1) {
-    		if(a / b >= 1) {
-    			a = a - b;
-    		} else if(a / b <= -1) {
-    			a = a + b;
+    	if(Double.isInfinite(dividend))
+    		return Double.NaN;
+    	
+    	if(!Double.isInfinite(dividend) && Double.isInfinite(divisor))
+    		return dividend;
+    		
+    	if(Util.fuzzyEquals(divisor, 0, 1E-9) || Util.fuzzyEquals(divisor, 1, 1E-9))
+    		return dividend;
+    	
+    	while(Math.abs(dividend / divisor) >= 1) {
+    		if(dividend / divisor >= 1) {
+    			dividend -= divisor;
+    		} else if(dividend / divisor <= -1) {
+    			dividend += divisor;
     		}
     	}
-    	return a;
+    	return dividend;
     }
 
+    
 	public static boolean fuzzyEquals(double x, double y) {
 		return fuzzyEquals(x, y, DEFAULT_EPSILON);
 	}
