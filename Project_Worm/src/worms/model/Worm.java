@@ -69,6 +69,25 @@ public class Worm {
 	 * @param name The name of the new worm.
 	 * @param actionPoints The amount of action points for the new worm.
 	 * 
+	 * @effect	A new worm will be initialized with a position, angle, radius, name and the chosen amount of action points.
+	 * 			In the case the amount of action points is greater than the maximum allowed amount the amount will be set to that maximum.
+	 * 			| this(position, angle, radius, name);
+	 * 			| this.setCurrentActionPoints(actionPoints)
+	 * 
+	 */
+	public Worm(Position position, double angle, double radius, String name, int actionPoints) {
+		this(position, angle, radius, name);
+		this.setCurrentActionPoints(actionPoints);
+	}
+	
+	/**
+	 * Initialize a new worm with a maximum amount of action points possible for this worm.
+	 * 
+	 * @param position The position of the new worm.
+	 * @param angle The angle of the new worm.
+	 * @param radius The radius of the new worm.
+	 * @param name The name of the new worm.
+	 * 
 	 * @effect	The position of the new worm is set to position.
 	 * 			| this.setPosition(position)
 	 * 
@@ -81,33 +100,16 @@ public class Worm {
 	 * @effect	The name of the new worm is set to name.
 	 * 			| this.setName(name)
 	 * 
-	 * @effect	The amount of current action points of the new worm will be set to actionPoints except if greater than the maximum allowed amount.
-	 * 			in which case the action points amount will be set to the maximum.
-	 * 			| this.setCurrentActionPoints(actionPoints)
-	 * 
-	 */
-	public Worm(Position position, double angle, double radius, String name, int actionPoints) {
-		this.setPosition(position); //TODO: Test for Nullpointer throwing
-		this.setAngle(angle);
-		this.setRadius(radius);
-		this.setName(name);
-		this.setCurrentActionPoints(actionPoints);
-	}
-	
-	/**
-	 * Initialize a new worm with a maximum amount of action points possible for this worm.
-	 * 
-	 * @param position The position of the new worm.
-	 * @param angle The angle of the new worm.
-	 * @param radius The radius of the new worm.
-	 * @param name The name of the new worm.
-	 * 
-	 * @effect	A new worm will be initialized with a position, angle, radius, name and the maximum amount of action points.
-	 * 			| this(position, angle, radius, name, Integer.MAX_VALUE);
+	 * @effect	The amount of current action points of the new worm will be set to the maximum possible for this worm.
+	 * 			| this.setCurrentActionPoints(this.getMaximumActionPoints())
 	 * 
 	 */
 	public Worm(Position position, double angle, double radius, String name) {
-		this(position, angle, radius, name, Integer.MAX_VALUE);
+		this.setPosition(position);
+		this.setAngle(angle);
+		this.setRadius(radius);
+		this.setName(name);
+		this.setCurrentActionPoints(this.getMaximumActionPoints());
 	}
 	
 	
