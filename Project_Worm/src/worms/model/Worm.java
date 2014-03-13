@@ -31,14 +31,14 @@ import worms.util.Util;
  * @invar	This worm's action points amount is at all times less than or equal to the maximum amount.
  * 			| this.getCurrentActionPoints() <= this.getMaximumActionPoints()
  * 
- * @invar	| This worm's name is at all times a valid name or equal to an empty String.
- * 			| this.getName().equals("") || isValidName(this.getName())
+ * @invar	| This worm's name is at all times a valid name.
+ * 			| isValidName(this.getName())
  * 
  * @invar	This worm's radius is at all times equal to or higher than the minimum radius.
  * 			| this.getRadius() >= this.getMinimumRadius()
  * 
- * @invar	This worm's angle is greater than or equal to 0 and less than 2*Math.PI.
- * 			| this.getAngle() >= 0 && this.getAngle() < 2*Math.PI
+ * @invar	This worm's angle is at all times a valid angle.
+ * 			| isValidAngle(this.getAngle())
  * 
  * @invar	No double will have the value of "Not A Number" and neither will any double returning function return it.
  *			| !Double.isNaN(...)
@@ -85,6 +85,7 @@ public class Worm {
 	 * 			| this.setCurrentActionPoints(actionPoints)
 	 * 
 	 */
+	@Raw
 	public Worm(Position position, double angle, double radius, String name, int actionPoints) {
 		this.setPosition(position); //TODO: Test for Nullpointer throwing
 		this.setAngle(angle);
@@ -105,6 +106,7 @@ public class Worm {
 	 * 			| this(position, angle, radius, name, Integer.MAX_VALUE);
 	 * 
 	 */
+	@Raw
 	public Worm(Position position, double angle, double radius, String name) {
 		this(position, angle, radius, name, Integer.MAX_VALUE);
 	}
@@ -129,8 +131,10 @@ public class Worm {
 	 * 			| this.setPosition(this.jumpStep(this.jumpTime()))
 	 */
 	public void jump() {
-		this.setPosition(this.jumpStep(this.jumpTime()));
-		this.setCurrentActionPoints(0);
+		if(!Util.fuzzyGreaterThanOrEqualTo(this.getAngle(), Math.PI)) {
+			this.setPosition(this.jumpStep(this.jumpTime()));
+			this.setCurrentActionPoints(0);
+		}
 	}
 	
 	
@@ -168,7 +172,7 @@ public class Worm {
 			return this.getPosition();
 		}
 		
-		if(Util.fuzzyGreaterThanOrEqualTo(this.getAngle(), Math.PI)) { //TODO: If we change from 0 - 360 to -180 -> 180 we have to change this as well.
+		if(Util.fuzzyGreaterThanOrEqualTo(this.getAngle(), Math.PI)) {
 			return this.getPosition();
 		}
 		
@@ -308,10 +312,6 @@ public class Worm {
 		assert isValidAngle(Math.abs(angle*2));
 		assert this.getCurrentActionPoints() >= getTurnCost(angle);
 		
-		System.out.println("Our angle combined:" + (this.getAngle() + angle)); //TODO: Delete debug messages
-		System.out.println("set to angle: " + ((this.getAngle() + angle + 2*Math.PI) % 2*Math.PI));
-		System.out.println("Our modulo thingy: " + Util.modulo(this.getAngle() + angle + 2*Math.PI, 2*Math.PI));
-		
 		this.setAngle(Util.modulo(this.getAngle() + angle + 2*Math.PI, 2*Math.PI));
 		this.setCurrentActionPoints(this.getCurrentActionPoints() - getTurnCost(angle));
 	}
@@ -345,7 +345,7 @@ public class Worm {
 	 * 			| (new.getAngle() == angle)
 	 */
 	private void setAngle(double angle) {
-		assert isValidAngle(angle); //TODO: invariant
+		assert isValidAngle(angle);
 		this.angle = angle;
 	}
 	
