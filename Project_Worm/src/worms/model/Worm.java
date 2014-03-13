@@ -308,10 +308,11 @@ public class Worm {
 		assert isValidAngle(Math.abs(angle*2));
 		assert this.getCurrentActionPoints() >= getTurnCost(angle);
 		
-		System.out.println("Our angle combined:" + (this.getAngle() + angle));
+		System.out.println("Our angle combined:" + (this.getAngle() + angle)); //TODO: Delete debug messages
+		System.out.println("set to angle: " + ((this.getAngle() + angle + 2*Math.PI) % 2*Math.PI));
+		System.out.println("Our modulo thingy: " + Util.modulo(this.getAngle() + angle + 2*Math.PI, 2*Math.PI));
 		
-		System.out.println("set to angle: " + ((this.getAngle() + angle))); // + 2*Math.PI) % 2*Math.PI
-		this.setAngle((this.getAngle() + angle)); // + 2*Math.PI) % 2*Math.PI //TODO: Tests
+		this.setAngle(Util.modulo(this.getAngle() + angle + 2*Math.PI, 2*Math.PI));
 		this.setCurrentActionPoints(this.getCurrentActionPoints() - getTurnCost(angle));
 	}
 	

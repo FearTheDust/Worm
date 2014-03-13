@@ -41,7 +41,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public void turn(Worm worm, double angle) { //TODO: Tests
-		System.out.println("First angle:" + angle);
+		System.out.println("First angle:" + angle); //TODO: delete debug messages
 		angle %= 2*Math.PI;
 		System.out.println("Modulo:" + angle);
 		

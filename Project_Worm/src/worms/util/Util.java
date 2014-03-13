@@ -2,6 +2,21 @@ package worms.util;
 
 public class Util {
 	public static final double DEFAULT_EPSILON = 1e-4;
+	
+	//TODO TESTS, IMPROVE
+    public static double modulo(double a, double b) {
+    	if(b == 0)
+    		return 0;
+    	
+    	while(Math.abs(a / b) >= 1) {
+    		if(a / b >= 1) {
+    			a = a - b;
+    		} else if(a / b <= -1) {
+    			a = a + b;
+    		}
+    	}
+    	return a;
+    }
 
 	public static boolean fuzzyEquals(double x, double y) {
 		return fuzzyEquals(x, y, DEFAULT_EPSILON);
