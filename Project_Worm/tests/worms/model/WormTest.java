@@ -28,26 +28,54 @@ public class WormTest {
 
 	@After
 	public void tearDown() throws Exception {
+	}	
+	
+	@Test
+	public void testWormPositionAngleRadiusNameActionpoints() {
+		Worm worm = new Worm(new Position(-1,2), 3, 4, "Testworm", 5);
+		assertEquals(worm.getPosition(),new Position(-1,2));
+		assertEquals(worm.getAngle(),3,0);
+		assertEquals(worm.getRadius(),4,0);
+		assertEquals(worm.getName(),"Testworm");
+		assertEquals(worm.getCurrentActionPoints(),5);
+		
+	}
+
+	@Test
+	public void testWormPositionAngleRadiusName() {
+		Worm worm = new Worm(new Position(-1,2), 3, 4, "Testworm");
+		assertEquals(worm.getPosition(),new Position(-1,2));
+		assertEquals(worm.getAngle(),3,0);
+		assertEquals(worm.getRadius(),4,0);
+		assertEquals(worm.getName(),"Testworm");
+		assertEquals(worm.getCurrentActionPoints(),worm.getMaximumActionPoints());
 	}
 
 	
+	
 	@Test
-	public void testWorm() {
-		fail("Not yet implemented"); // TODO
+	public void testJump_LegalAngle() {
+		Worm worm = new Worm(new Position(0,0), Math.PI/4, 1, "Test jump legal", 1);
+		Position oldJump=worm.jumpStep(worm.jumpTime());
+		worm.jump();
+		assertEquals(worm.getPosition(),oldJump); //jumpStep and jumpTime already tested.
+		assertEquals(worm.getCurrentActionPoints(),0);
 	}
-
+	
 	@Test
-	public void testWormPositionDoubleDoubleString() {
-		fail("Not yet implemented"); // TODO
+	public void testJump_IllegalAngleRight() {
+		Worm worm = new Worm(new Position(0,0), 0, 1, "Test jump right", 1);
+		worm.jump();
+		assertEquals(worm.getPosition(),new Position(0,0));
+		assertEquals(worm.getCurrentActionPoints(),1);
 	}
-
-	
-	
 	
 	@Test
-	public void testJump() {
-		//Worm worm = new Worm(new Position(0,0), 0, 1, "Test jump from", 1);	
-		fail("Not yet implemented"); // TODO
+	public void testJump_IllegalAngleLeft() {
+		Worm worm = new Worm(new Position(0,0), Math.PI, 1, "Test jump left", 1);
+		worm.jump();
+		assertEquals(worm.getPosition(),new Position(0,0));
+		assertEquals(worm.getCurrentActionPoints(),1);
 	}
 
 	@Test
@@ -126,18 +154,53 @@ public class WormTest {
 	}
 
 	@Test
-	public void testTurn() {
-		Worm worm = new Worm(new Position(0,0), 3/2 * Math.PI, 1, "Test");
-		fail("Yet to implement"); //TODO
+	public void testTurnPositive() {
+		Worm worm = new Worm(new Position(0,0), 3.0/2.0 * Math.PI, 1, "Test", 16);
+		worm.turn(Math.PI/2);
+		assertEquals(worm.getAngle(),0,1E-9);
+		assertEquals(worm.getCurrentActionPoints(),1);
 	}
 
+	@Test
+	public void testTurnZero() {
+		Worm worm = new Worm(new Position(0,0), 3.0/2.0 * Math.PI, 1, "Test", 16);
+		worm.turn(0);
+		assertEquals(worm.getAngle(),3.0/2.0 * Math.PI,1E-9);
+		assertEquals(worm.getCurrentActionPoints(),16);
+	}
+	
+	@Test
+	public void testTurnNegative() {
+		Worm worm = new Worm(new Position(0,0), 3.0/2.0 * Math.PI, 1, "Test", 16);
+		worm.turn(-Math.PI/2);
+		assertEquals(worm.getAngle(),Math.PI,1E-9);
+		assertEquals(worm.getCurrentActionPoints(),1);
+	}
+	
 	/**
 	 * Case angle -PI
 	 */
 	@Test
-	public void testGetTurnCost() {
+	public void testGetTurnCostNegative() {
 		assertEquals(Worm.getTurnCost(-Math.PI), 30);
 	}
+	
+	/**
+	 * Case angle 0
+	 */
+	@Test
+	public void testGetTurnCostZero() {
+		assertEquals(Worm.getTurnCost(0), 0);
+	}
+		
+	/**
+	 * Case angle PI
+	 */
+	@Test
+	public void testGetTurnCostPositive() {
+		assertEquals(Worm.getTurnCost(Math.PI), 30);
+	}
+
 
 	/**
 	 * Test the radius setter in a regular case.

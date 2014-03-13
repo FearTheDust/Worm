@@ -131,7 +131,7 @@ public class Worm {
 	 * 			| this.setPosition(this.jumpStep(this.jumpTime()))
 	 */
 	public void jump() {
-		if(!Util.fuzzyGreaterThanOrEqualTo(this.getAngle(), Math.PI)) {
+		if(!Util.fuzzyGreaterThanOrEqualTo(this.getAngle(), Math.PI) && !Util.fuzzyEquals(this.getAngle(), 0)) {
 			this.setPosition(this.jumpStep(this.jumpTime()));
 			this.setCurrentActionPoints(0);
 		}
@@ -299,7 +299,7 @@ public class Worm {
 	 * @param angle The angle to turn.
 	 * 
 	 * @pre		The absolute value of the angle must be valid.
-	 * 			| isValidAngle(Math.abs(angle)) 			
+	 * 			| isValidAngle(Math.abs(2*angle)) 			
 	 * @pre		The cost to turn should be less or equal to the amount we have.
 	 * 			| this.getCurrentActionPoints() >= getTurnCost(angle)
 	 * 
@@ -309,7 +309,7 @@ public class Worm {
 	 * 			| new.getAngle() = this.getAngle() + angle
 	 */
 	public void turn(double angle) {
-		assert isValidAngle(Math.abs(angle*2));
+		assert isValidAngle(Math.abs(2*angle));
 		assert this.getCurrentActionPoints() >= getTurnCost(angle);
 		
 		this.setAngle(Util.modulo(this.getAngle() + angle + 2*Math.PI, 2*Math.PI));
