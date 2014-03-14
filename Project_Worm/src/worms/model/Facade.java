@@ -3,9 +3,10 @@ package worms.model;
 import worms.util.Position;
 
 /**
- * TODO: Add our info here.
- * @author Admin
+ * @author Coosemans Brent
+ * @author Derkinderen Vincent
  *
+ * TODO: Are we supposed to do it like this? All these try-catches?
  */
 public class Facade implements IFacade {
 
@@ -14,7 +15,6 @@ public class Facade implements IFacade {
 		try {
 			Position position = new Position(x,y);
 			return new Worm(position, direction, radius, name);
-			
 		} catch(NullPointerException | IllegalArgumentException ex) {
 			throw new ModelException(ex.getMessage());
 		}
@@ -22,7 +22,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public boolean canMove(Worm worm, int nbSteps) {
-		return nbSteps < 0 && Worm.getMoveCost(nbSteps, worm.getAngle()) <= worm.getCurrentActionPoints();
+		return nbSteps > 0 && Worm.getMoveCost(nbSteps, worm.getAngle()) <= worm.getCurrentActionPoints();
 	}
 
 	@Override
@@ -54,7 +54,11 @@ public class Facade implements IFacade {
 
 	@Override
 	public void jump(Worm worm) {
-		worm.jump();
+		try {
+			worm.jump();
+		} catch(IllegalArgumentException ex) {
+			throw new ModelException(ex.getMessage());
+		}
 	}
 
 	@Override
@@ -64,10 +68,13 @@ public class Facade implements IFacade {
 
 	@Override
 	public double[] getJumpStep(Worm worm, double t) {
-		Position newPosition = worm.jumpStep(t); //TODO: We left out the IllegalStateException as well as negative time.
-		double[] position = { newPosition.getX(), newPosition.getY() };
-		
-		return position;
+		try {
+			Position newPosition = worm.jumpStep(t);
+			double[] position = { newPosition.getX(), newPosition.getY() };
+			return position;
+		} catch(IllegalArgumentException exc) {
+			throw new ModelException(exc.getMessage());
+		}
 	}
 
 	@Override
