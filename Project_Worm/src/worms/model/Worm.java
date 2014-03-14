@@ -385,8 +385,9 @@ public class Worm {
 		if(Double.isNaN(radius))
 			throw new IllegalArgumentException("The radius must be a number.");
 		
+		int APdiff=this.getMaximumActionPoints()-this.getCurrentActionPoints();
 		this.radius = radius;
-		this.setCurrentActionPoints(this.getCurrentActionPoints());
+		this.setCurrentActionPoints(Math.max(0,this.getMaximumActionPoints()-APdiff));
 	}
 	
 	/**

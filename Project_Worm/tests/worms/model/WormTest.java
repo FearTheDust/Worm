@@ -51,8 +51,6 @@ public class WormTest {
 		assertEquals(worm.getCurrentActionPoints(),worm.getMaximumActionPoints());
 	}
 
-	
-	
 	@Test
 	public void testJump_LegalAngle() {
 		Worm worm = new Worm(new Position(0,0), Math.PI/4, 1, "Test jump legal", 1);
@@ -63,16 +61,26 @@ public class WormTest {
 	}
 	
 	@Test
-	public void testJump_IllegalAngleRight() {
+	public void testJump_LegalAngleRight() {
 		Worm worm = new Worm(new Position(0,0), 0, 1, "Test jump right", 1);
+		Position oldJump=worm.jumpStep(worm.jumpTime());
 		worm.jump();
-		assertEquals(worm.getPosition(),new Position(0,0));
-		assertEquals(worm.getCurrentActionPoints(),1);
+		assertEquals(worm.getPosition(),oldJump);
+		assertEquals(worm.getCurrentActionPoints(),0);
 	}
 	
 	@Test
-	public void testJump_IllegalAngleLeft() {
+	public void testJump_LegalAngleLeft() {
 		Worm worm = new Worm(new Position(0,0), Math.PI, 1, "Test jump left", 1);
+		Position oldJump=worm.jumpStep(worm.jumpTime());
+		worm.jump();
+		assertEquals(worm.getPosition(),oldJump);
+		assertEquals(worm.getCurrentActionPoints(),0);
+	}
+	
+	@Test
+	public void testJump_IllegalAngle() {
+		Worm worm = new Worm(new Position(0,0), 3*Math.PI/2, 1, "Test jump illegal", 1);
 		worm.jump();
 		assertEquals(worm.getPosition(),new Position(0,0));
 		assertEquals(worm.getCurrentActionPoints(),1);
