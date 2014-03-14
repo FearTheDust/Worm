@@ -2,21 +2,22 @@ package worms.util;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
- * 
  * A class representing a position in a 2 dimensional space, represented by 2 coordinates x and y.
  * 
  * @invar 	The x- or y-coordinates are never "Not a Number".
  * 			| !Double.isNaN(this.getX()) && !Double.isNan(this.getY())
  * 
- *  @author Admin
- *  @version 1.1
+ *  @author Derkinderen Vincent
+ *  @author Coosemans Brent
  *  
+ *  @version 1.1 //TODO: moet dat erbij?
  */
 
 public class Position {
 	
 	/**
 	 * Initialize this new position with the given x and y coordinates.
+	 * 
 	 * @param x The x-coordinate of this new position.
 	 * @param y The y-coordinate of this new position.
 	 * 
@@ -49,8 +50,6 @@ public class Position {
 	
 	private final double x;
 	
-	
-	
 	/**
 	 * Return the Y-coordinate of this position.
 	 */
@@ -61,7 +60,6 @@ public class Position {
 
 	private final double y;
 	
-	
 	@Override
 	public boolean equals(Object otherObject) { //TODO: Implement a test
 		if(otherObject instanceof Position) {
@@ -70,7 +68,4 @@ public class Position {
 		}
 		return false;
 	}
-	
-	
-
 }

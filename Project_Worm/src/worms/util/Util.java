@@ -3,7 +3,6 @@ package worms.util;
 public class Util {
 	public static final double DEFAULT_EPSILON = 1e-4;
 	
-	
 	/**
 	 * This function replaces % with more precision.
 	 * This function returns the rest of the dividend / divisor.
@@ -12,6 +11,7 @@ public class Util {
 	 * @param divisor The divisor
 	 * 
 	 * @return The rest of dividend/divisor.
+	 * 
 	 * @return If dividend or divisor is Not a Number this returns Double.NaN
 	 * 			| if(Double.isNaN(dividend) || Double.isNaN(divisor)) then
      *			| result == Double.NaN
@@ -51,7 +51,6 @@ public class Util {
     	return dividend;
     }
 
-    
 	public static boolean fuzzyEquals(double x, double y) {
 		return fuzzyEquals(x, y, DEFAULT_EPSILON);
 	}

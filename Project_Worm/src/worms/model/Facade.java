@@ -6,7 +6,6 @@ import worms.util.Position;
  * @author Coosemans Brent
  * @author Derkinderen Vincent
  *
- * TODO: Are we supposed to do it like this? All these try-catches?
  */
 public class Facade implements IFacade {
 

@@ -202,7 +202,6 @@ public class Worm {
 		if(this.getAngle() > Math.PI) {
 			return 0;
 		}
-		
 		//sin(2X) = 2sin(X)cos(X); so 2sin(X)cos(X)/cos(X) => 2sin(X) => return 0   => time can never be negative.
 		double force = 5 * this.getCurrentActionPoints() + this.getMass() * EARTH_ACCELERATION;
 		double startSpeed = (force / this.getMass()) * FORCE_TIME;
@@ -211,7 +210,6 @@ public class Worm {
 
 		return time;
 	}
-	
 	
 	/**
 	 * Move this worm a certain amount of steps in the direction it's facing.
@@ -387,7 +385,7 @@ public class Worm {
 		
 		int APdiff=this.getMaximumActionPoints()-this.getCurrentActionPoints();
 		this.radius = radius;
-		this.setCurrentActionPoints(Math.max(0,this.getMaximumActionPoints()-APdiff));
+		this.setCurrentActionPoints(this.getMaximumActionPoints()-APdiff);
 	}
 	
 	/**
@@ -409,7 +407,7 @@ public class Worm {
 	public double getMass() {
 		return getDensity() * (4.0/3.0) * Math.PI * Math.pow(this.getRadius(),3);
 	}
-	
+	//TODO: alles ivm setMass verwijderen?
 //	/**
 //	 * Sets the mass of this worm.
 //	 * @post	The mass of this worm is equal to the result of the formula "Mass = (getDensity()) * (4/3) * Math.PI * (radius)^3"
@@ -511,6 +509,7 @@ public class Worm {
 	@Raw @Model
 	private void setCurrentActionPoints(int actionPoints) {
 		this.currentActionPoints = (actionPoints > getMaximumActionPoints()) ? getMaximumActionPoints() : actionPoints;
+		//TODO: this.currentActionPoints = actionPoints
 		if(actionPoints < 0)
 			this.currentActionPoints = 0;
 	}
@@ -529,7 +528,6 @@ public class Worm {
 	public int getMaximumActionPoints() {
 		if(this.getMass() > Integer.MAX_VALUE)
 			return Integer.MAX_VALUE;
-		
 		return (int) Math.round(this.getMass());
 	}
 	
