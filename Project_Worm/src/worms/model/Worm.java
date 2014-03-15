@@ -418,7 +418,7 @@ public class Worm {
 //	@Raw
 //	private void setMass() /*throws IllegalArgumentException*/ {
 //		//We'd better use an argument if we use this...
-//		/*if(this.radius >= Math.pow(Double.MAX_VALUE * (3/4) / DENSITY / Math.PI, 1/3))
+//		/*if(this.radius >= Math.pow(Double.MAX_VALUE * (3.0/4.0) / DENSITY / Math.PI, 1/3))
 //			throw new IllegalArgumentException();*/
 //			
 //		this.mass = getDensity() * (4.0/3.0) * Math.PI * Math.pow(this.getRadius(),3);
