@@ -26,7 +26,7 @@ import worms.util.Util;
  * @author Derkinderen Vincent - Bachelor Informatica - R0458834
  * @author Coosemans Brent - Bachelor Informatica - R0376498
  * 
- * @Repository https://github.com/FearTheDust
+ * @Repository https://github.com/FearTheDust/Worm.git
  * 
  * 
  * 
