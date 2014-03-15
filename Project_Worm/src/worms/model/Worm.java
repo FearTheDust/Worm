@@ -414,7 +414,7 @@ public class Worm {
 //	/**
 //	 * Sets the mass of this worm.
 //	 * @post	The mass of this worm is equal to the result of the formula "Mass = (getDensity()) * (4/3) * Math.PI * (radius)^3"
-//	 * 			| new.getMass() == getDensity() * (4/3) * Math.PI * Math.pow(this.getRadius(),3)
+//	 * 			| new.getMass() == getDensity() * (4.0/3.0) * Math.PI * Math.pow(this.getRadius(),3)
 //	 * 
 //	 * @post	see setCurrentActionPoints(this.getCurrentActionPoints()) //@effect?
 //	 */

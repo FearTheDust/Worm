@@ -228,10 +228,22 @@ public class WormTest {
 	 * Test the radius setter in a regular case.
 	 */
 	@Test
-	public void testSetRadius() { //TODO: Tests for IlegalArgumentException
+	public void testSetRadius_Legal() {
 		Worm worm = new Worm(new Position(0,0), 0, 2, "Test Radius Legal");
 		worm.setRadius(1);
 		assertEquals(worm.getRadius(), 1, 0);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testSetRadius_Illegal() {
+		Worm worm = new Worm(new Position(0,0), 0, 2, "Test Radius Illegal");
+		worm.setRadius(worm.getMinimumRadius()-0.1);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testSetRadius_NaN() {
+		Worm worm = new Worm(new Position(0,0), 0, 2, "Test Radius NaN");
+		worm.setRadius(Double.NaN);
 	}
 
 	/**
