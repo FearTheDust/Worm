@@ -7,6 +7,13 @@ import org.junit.Test;
 import worms.util.Position;
 import worms.util.Util;
 
+/**
+ * 
+ * @author ...
+ * @author Derkinderen Vincent
+ * @author Coosemans Brent
+ *
+ */
 public class PartialFacadeTest {
 
 	/**
@@ -61,54 +68,54 @@ public class PartialFacadeTest {
 		assertTrue(facade.canMove(wormPoor,	0));
 		assertTrue(facade.canMove(wormRich, 2));	
 	}
+
+	/**
+	 * Test canTurn(Worm, double)
+	 * with an insufficient AP amount
+	 * with a sufficient AP amount
+	 */
+	@Test
+	public void testCanTurn() {
+		Worm wormPoor = new Worm(new Position(0,0), 0, 1, "Test worm insufficient AP", 5);
+		Worm wormRich = facade.createWorm(0, 0, 0, 1, "Test Worm enough AP");
+		
+		assertFalse(facade.canTurn(wormPoor, Math.PI));
+		assertTrue(facade.canTurn(wormRich, Math.PI));
+	}
+
 	
 	/**
-	 * Test getMaxActionPoints
+	 * Tests the turn(Worm, double)
+	 * in case of 4*Math.PI and -4*Math.PI
+	 * in case of 3*Math.PI and -3*Math.PI
+	 * in case of -Math.PI / 8
+	 * in case of 0
 	 */
 	@Test
-	public void testGetMaxActonPoints() {
-		Worm worm = facade.createWorm(0, 0, 0, 1, "Test Max AP");
-		assertEquals(4448, facade.getMaxActionPoints(worm));
-	}
-
-	/**
-	 * Test move horizontally
-	 */
-	@Test
-	public void testMove_Horizontal() {
-		Worm worm = facade.createWorm(0, 0, 0, 1, "Test move horizontal");
-		int oldAP=facade.getActionPoints(worm);
-		facade.move(worm, 5);
-		assertEquals(facade.getX(worm), 5, EPS);
-		assertEquals(facade.getY(worm), 0, EPS);
-		assertEquals(facade.getActionPoints(worm),oldAP-5);
-	}
-
-	/**
-	 * Test move vertically
-	 */
-	@Test
-	public void testMove_Vertical() {
-		Worm worm = facade.createWorm(0, 0, Math.PI / 2,  1, "Test move vertical");
-		int oldAP = facade.getActionPoints(worm);
-		facade.move(worm, 5);
-		assertEquals(facade.getX(worm), 0, EPS);
-		assertEquals(facade.getY(worm), 5, EPS);
-		assertEquals(facade.getActionPoints(worm), oldAP-20);
-	}
-
-	/**
-	 * Test jump facing downwards
-	 */
-	@Test
-	public void testJump_Exception() {
-		Worm worm = facade.createWorm(0, 0, 3 * Math.PI / 2, 1, "Test");
-		int OldAP=facade.getActionPoints(worm);
-		facade.jump(worm);
+	public void testTurn() {
+		Worm worm = facade.createWorm(0, 0, 0, 1, "Test Turn");
 		
-		assertEquals(facade.getActionPoints(worm),OldAP);
-		assertEquals(facade.getX(worm),0,0);
-		assertEquals(facade.getY(worm),0,0);
+		facade.turn(worm, 4*Math.PI);
+		assertEquals(worm.getAngle(), 0, EPS);
+		
+		facade.turn(worm, -4*Math.PI);
+		assertEquals(worm.getAngle(), 0, EPS);
+		
+		facade.turn(worm, 3*Math.PI);
+		assertEquals(worm.getAngle(), Math.PI, EPS);
+		
+		facade.turn(worm, -3*Math.PI);
+		assertEquals(worm.getAngle(), 0, EPS);
+		
+		facade.turn(worm, -Math.PI / 8);
+		assertEquals(worm.getAngle(), 15*Math.PI / 8, EPS);
+		
+		facade.turn(worm, 0);
+		assertEquals(worm.getAngle(), 15*Math.PI / 8, EPS);
 	}
-
+	
+	
+	
+	
+	
 }

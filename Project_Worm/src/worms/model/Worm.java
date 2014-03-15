@@ -21,12 +21,14 @@ import worms.util.Util;
  * ActionPoint DONE
  */
 
-//TODO: Check access modifiers and modify them to the most suited one.
-
 
 /**
- * @author Derkinderen Vincent 
- * @author Coosemans Brent
+ * @author Derkinderen Vincent - Bachelor Informatica - R0458834
+ * @author Coosemans Brent - Bachelor Informatica - R0376498
+ * 
+ * @Repository https://github.com/FearTheDust
+ * 
+ * 
  * 
  * @invar	This worm's action points amount is at all times less than or equal to the maximum amount of action points and greater than or equal to 0.
  * 			| 0 <= this.getCurrentActionPoints() <= this.getMaximumActionPoints()
@@ -201,6 +203,7 @@ public class Worm {
 		if(this.getAngle() > Math.PI) {
 			return 0;
 		}
+		
 		//sin(2X) = 2sin(X)cos(X); so 2sin(X)cos(X)/cos(X) => 2sin(X) => return 0   => time can never be negative.
 		double force = 5 * this.getCurrentActionPoints() + this.getMass() * EARTH_ACCELERATION;
 		double startSpeed = (force / this.getMass()) * FORCE_TIME;
@@ -228,7 +231,7 @@ public class Worm {
 	 * 			If steps is smaller than zero or if this worm doesn't have enough action points.
 	 * 			| steps<0 || this.getMoveCost(steps,this.getAngle())>this.getCurrentActionPoints()
 	 */
-	public void move(int steps) throws IllegalArgumentException{
+	public void move(int steps) throws IllegalArgumentException {
 		if(steps < 0)
 			throw new IllegalArgumentException("Steps must be higher than or equal to zero");
 		if(getMoveCost(steps,getAngle()) > getCurrentActionPoints())
@@ -382,7 +385,7 @@ public class Worm {
 		if(Double.isNaN(radius))
 			throw new IllegalArgumentException("The radius must be a number.");
 		
-		int APdiff=this.getMaximumActionPoints()-this.getCurrentActionPoints();
+		int APdiff = this.getMaximumActionPoints()-this.getCurrentActionPoints();
 		this.radius = radius;
 		this.setCurrentActionPoints(this.getMaximumActionPoints()-APdiff);
 	}
@@ -407,7 +410,7 @@ public class Worm {
 		return getDensity() * (4.0/3.0) * Math.PI * Math.pow(this.getRadius(),3);
 	}
 
-	
+// In case of later use.
 //	/**
 //	 * Sets the mass of this worm.
 //	 * @post	The mass of this worm is equal to the result of the formula "Mass = (getDensity()) * (4/3) * Math.PI * (radius)^3"
@@ -424,7 +427,7 @@ public class Worm {
 //		this.mass = getDensity() * (4.0/3.0) * Math.PI * Math.pow(this.getRadius(),3);
 //		this.setCurrentActionPoints(this.getCurrentActionPoints());
 //	}
-	
+//	private double mass;
 	
 	/**
 	 * Returns this worm's density.
@@ -433,8 +436,7 @@ public class Worm {
 	public static final double getDensity() {
 		return DENSITY;
 	}
-	
-//	private double mass;
+
 	private static final double DENSITY = 1062;
 	
 	/**
@@ -517,7 +519,7 @@ public class Worm {
 	/**
 	 * Returns the current amount of action points.
 	 */
-	@Basic 
+	@Basic @Raw
 	public int getCurrentActionPoints() {
 		return currentActionPoints;
 	}

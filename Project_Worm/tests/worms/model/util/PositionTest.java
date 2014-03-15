@@ -53,8 +53,8 @@ public class PositionTest {
 	@Test
 	public void testEqualsObject() {
 		//Same values
-		Position firstPosition00 = new Position(0,0);
-		Position secondPosition00 = new Position(0,0);
+		Position firstPosition00 = new Position(0.1568984989189189156,0);
+		Position secondPosition00 = new Position(0.1568984989189189158,0); //value, < epsilon difference
 		//Different value
 		Position firstPosition10 = new Position(1,0);
 		

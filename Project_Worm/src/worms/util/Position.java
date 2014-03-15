@@ -5,7 +5,7 @@ import be.kuleuven.cs.som.annotate.*;
  * A class representing a position in a 2 dimensional space, represented by 2 coordinates x and y.
  * 
  * @invar 	The x- or y-coordinates are never "Not a Number".
- * 			| !Double.isNaN(this.getX()) && !Double.isNan(this.getY())
+ * 			| !Double.isNaN(this.getX()) && !Double.isNaN(this.getY())
  * 
  *  @author Derkinderen Vincent
  *  @author Coosemans Brent
@@ -30,7 +30,6 @@ public class Position {
 	 * 			When x- or y-coordinate aren't valid coordinates.
 	 * 			| Double.isNaN(x) || Double.isNaN(y)
 	 */
-	@Raw
 	public Position(double x, double y) throws IllegalArgumentException {
 		if(Double.isNaN(x) || Double.isNaN(y))
 			throw new IllegalArgumentException("A coordinate was Not a Number.");
@@ -63,7 +62,7 @@ public class Position {
 	public boolean equals(Object otherObject) {
 		if(otherObject instanceof Position) {
 			Position otherPosition = (Position) otherObject;
-			return (this.getX() == otherPosition.getX() && this.getY() == otherPosition.getY());
+			return (Util.fuzzyEquals(this.getX(), otherPosition.getX()) && Util.fuzzyEquals(this.getY(),otherPosition.getY()));
 		}
 		return false;
 	}

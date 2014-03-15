@@ -12,6 +12,11 @@ import org.junit.Test;
 import worms.model.Worm;
 import worms.util.Position;
 
+/**
+ * 
+ * @author Coosemans Brent
+ * @author Derkinderen Vincent
+ */
 public class WormTest {
 	
 	@BeforeClass
@@ -152,16 +157,27 @@ public class WormTest {
 	}
 	
 	/**
-	 * Test Move with a legal amounts of steps and sufficient amount of action points
+	 * Test Move (horizontally) with a legal amounts of steps and sufficient amount of action points
 	 */
 	@Test
-	public void testMove_Legal() {
-		Worm worm = new Worm(new Position(0,0), 0, 1, "Test Move Legal", 3);
-		worm.move(2);
-		
-		assertEquals(worm.getPosition().getX(), 2, 0);
-		assertEquals(worm.getPosition().getY(), 0, 0);
-		assertEquals(worm.getCurrentActionPoints(),1);
+	public void testMove_Horizontal() {
+		Worm worm = new Worm(new Position(0,0), 0, 1, "Test move horizontal");
+		int oldAP=worm.getCurrentActionPoints();
+		worm.move(5);
+		assertEquals(worm.getPosition(), new Position(5,0));
+		assertEquals(worm.getCurrentActionPoints(),oldAP-5);
+	}
+
+	/**
+	 * Test Move (vertically) with a legal amounts of steps and sufficient amount of action points
+	 */
+	@Test
+	public void testMove_Vertical() {
+		Worm worm = new Worm(new Position(0,0), Math.PI / 2,  1, "Test move vertical");
+		int oldAP = worm.getCurrentActionPoints();
+		worm.move(5);
+		assertEquals(worm.getPosition(), new Position(0,5));
+		assertEquals(worm.getCurrentActionPoints(), oldAP-20);
 	}
 	
 	/**
@@ -352,7 +368,6 @@ public class WormTest {
 	@Test
 	public void testGetMaximumActionPoints_HighestMaximum() {
 		Worm worm = new Worm(new Position(0,0), 0, Double.MAX_VALUE, "Test Max AP Max Value");
-		
 		assertEquals(worm.getMaximumActionPoints(), Integer.MAX_VALUE);
 	}
 	

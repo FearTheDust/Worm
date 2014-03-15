@@ -40,7 +40,7 @@ public class Facade implements IFacade {
 
 	@Override
 	public void turn(Worm worm, double angle) {
-		angle %= 2*Math.PI;
+		angle %= 2*Math.PI; //-180 -> 180
 		
 		if(angle < -Math.PI) {
 			angle += 2*Math.PI;
@@ -127,10 +127,11 @@ public class Facade implements IFacade {
 
 	@Override
 	public void rename(Worm worm, String newName) {
-		if(!Worm.isValidName(newName)) //We prefer to make the check instead of using try-catch as try-catch costs more and the chance the exception happens should be small.
-			throw new ModelException("Illegal name.");
-			
-		worm.setName(newName);
+		try {
+			worm.setName(newName);
+		} catch(IllegalArgumentException ex) {
+			throw new ModelException(ex.getMessage());
+		}
 	}
 
 	@Override

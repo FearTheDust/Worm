@@ -39,8 +39,8 @@ public class GameState {
 	private int nameIndex = 0;
 
 	private void createRandomWorms() {
-		Worm worm1 = facade.createWorm(5, 5, 0, 0.25 + 2, "Our Test Worm"); //TODO Delete
-		worms.add(worm1);
+		//Worm worm1 = facade.createWorm(5, 5, 0, 0.25 + 2, "Our Test Worm"); //Test worm :)
+		//worms.add(worm1);
 		
 		for (int i = 0; i < wormNames.size(); i++) {
 			String name = wormNames.get(nameIndex++);
