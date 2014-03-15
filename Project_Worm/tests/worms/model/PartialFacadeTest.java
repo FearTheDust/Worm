@@ -23,39 +23,37 @@ public class PartialFacadeTest {
 	public void setup() {
 		facade = new Facade();
 	}
-
+ 
 	/**
-	 * Test createWorm(double, double, double, double, String) legal case.
-	 * 
+	 * Test createWorm with all legal arguments
 	 */
 	@Test
 	public void testCreateWorm_Legal() {
-		Worm worm = facade.createWorm(1, 1, 0, 1, "Test legal createWorm");
+		Worm worm = facade.createWorm(1, 1, 0, 1, "Test createWorm legal");
 		assertTrue(worm != null);
 	}
 	
 	/**
-	 * Test createWorm(double, double, double, double, String) illegal case.
-	 * When an illegal coordinate is provided.
-	 * 
+	 * Test createWorm with an illegal argument: an illegal coordinate.
+	 *
 	 * All tests for throwing exceptions by the constructor new Worm are tested in WormTest.class
 	 * Therefore we decided not to write any test cases whether the exception was passed.
 	 */
 	@Test(expected=ModelException.class)
 	public void testCreateWorm_Illegal() {
-		facade.createWorm(Double.NaN, 1, 0, 1, "Test illegal createWorm");
+		facade.createWorm(Double.NaN, 1, 0, 1, "Test createWorm illegal");
 	}
 	
 	/**
-	 * Test canMove(Worm, int)
-	 * case nbSteps < 0
-	 * case Worm.getMoveCost(nbSteps, worm.getAngle()) > worm.getCurrentActionPoints()
-	 * case Worm.getMoveCost(nbSteps, worm.getAngle()) <= worm.getCurrentActionPoints() && nbSteps > 0
+	 * Test canMove
+	 * with insufficient amount of action points
+	 * with number of steps smaller than zero
+	 * with legal number of steps and legal amount of action points
 	 */
 	@Test
 	public void testCanMove() {
-		Worm wormPoor = new Worm(new Position(0,0), 0, 1, "Test", 0);
-		Worm wormRich = facade.createWorm(0, 0, 0, 1, "Test");
+		Worm wormPoor = new Worm(new Position(0,0), 0, 1, "Test canMove Zero AP", 0);
+		Worm wormRich = facade.createWorm(0, 0, 0, 1, "Test canMove");
 		
 		assertFalse(facade.canMove(wormPoor, 1));
 		assertFalse(facade.canMove(wormRich, -1));
@@ -64,28 +62,44 @@ public class PartialFacadeTest {
 		assertTrue(facade.canMove(wormRich, 2));	
 	}
 	
+	/**
+	 * Test getMaxActionPoints
+	 */
 	@Test
-	public void testMaximumActionPoints() {
-		Worm worm = facade.createWorm(0, 0, 0, 1, "Test");
+	public void testGetMaxActonPoints() {
+		Worm worm = facade.createWorm(0, 0, 0, 1, "Test Max AP");
 		assertEquals(4448, facade.getMaxActionPoints(worm));
 	}
 
+	/**
+	 * Test move horizontally
+	 */
 	@Test
-	public void testMove_Horizontal() { //TODO Test decrease in AP
-		Worm worm = facade.createWorm(0, 0, 0, 1, "Test");
+	public void testMove_Horizontal() {
+		Worm worm = facade.createWorm(0, 0, 0, 1, "Test move horizontal");
+		int oldAP=facade.getActionPoints(worm);
 		facade.move(worm, 5);
-		assertEquals(5, facade.getX(worm), EPS);
-		assertEquals(0, facade.getY(worm), EPS);
+		assertEquals(facade.getX(worm), 5, EPS);
+		assertEquals(facade.getY(worm), 0, EPS);
+		assertEquals(facade.getActionPoints(worm),oldAP-5);
 	}
 
+	/**
+	 * Test move vertically
+	 */
 	@Test
-	public void testMove_Vertical() { //TODO Test decrease in AP
-		Worm worm = facade.createWorm(0, 0, Math.PI / 2,  1, "Test");
+	public void testMove_Vertical() {
+		Worm worm = facade.createWorm(0, 0, Math.PI / 2,  1, "Test move vertical");
+		int oldAP = facade.getActionPoints(worm);
 		facade.move(worm, 5);
-		assertEquals(0, facade.getX(worm), EPS);
-		assertEquals(5, facade.getY(worm), EPS);
+		assertEquals(facade.getX(worm), 0, EPS);
+		assertEquals(facade.getY(worm), 5, EPS);
+		assertEquals(facade.getActionPoints(worm), oldAP-20);
 	}
 
+	/**
+	 * Test jump facing downwards
+	 */
 	@Test
 	public void testJump_Exception() {
 		Worm worm = facade.createWorm(0, 0, 3 * Math.PI / 2, 1, "Test");
