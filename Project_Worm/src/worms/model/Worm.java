@@ -22,6 +22,8 @@ import worms.util.Util;
  */
 
 //TODO: Check access modifiers and modify them to the most suited one.
+//TODO: Switch Constructors
+
 
 /**
  * @author Derkinderen Vincent 
@@ -40,7 +42,7 @@ import worms.util.Util;
  * 			| isValidAngle(this.getAngle())
  * 
  * @invar	No double will have the value of "Not A Number" and neither will any double returning function return it.
- *			| !Double.isNaN(...) //TODO: moet hier nog iets op de "..."?
+ *			| !Double.isNaN(...)
  */
 public class Worm {
 
@@ -407,7 +409,8 @@ public class Worm {
 	public double getMass() {
 		return getDensity() * (4.0/3.0) * Math.PI * Math.pow(this.getRadius(),3);
 	}
-	//TODO: alles ivm setMass verwijderen?
+
+	
 //	/**
 //	 * Sets the mass of this worm.
 //	 * @post	The mass of this worm is equal to the result of the formula "Mass = (getDensity()) * (4/3) * Math.PI * (radius)^3"
@@ -424,6 +427,7 @@ public class Worm {
 //		this.mass = getDensity() * (4.0/3.0) * Math.PI * Math.pow(this.getRadius(),3);
 //		this.setCurrentActionPoints(this.getCurrentActionPoints());
 //	}
+	
 	
 	/**
 	 * Returns this worm's density.
