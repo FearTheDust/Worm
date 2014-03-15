@@ -14,14 +14,14 @@ public class Facade implements IFacade {
 		try {
 			Position position = new Position(x,y);
 			return new Worm(position, direction, radius, name);
-		} catch(NullPointerException | IllegalArgumentException ex) {
+		} catch(IllegalArgumentException ex) {
 			throw new ModelException(ex.getMessage());
 		}
 	}
 
 	@Override
 	public boolean canMove(Worm worm, int nbSteps) {
-		return nbSteps > 0 && Worm.getMoveCost(nbSteps, worm.getAngle()) <= worm.getCurrentActionPoints();
+		return nbSteps >= 0 && Worm.getMoveCost(nbSteps, worm.getAngle()) <= worm.getCurrentActionPoints();
 	}
 
 	@Override
