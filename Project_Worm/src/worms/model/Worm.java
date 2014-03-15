@@ -508,8 +508,7 @@ public class Worm {
 	 */
 	@Raw @Model
 	private void setCurrentActionPoints(int actionPoints) {
-		this.currentActionPoints = (actionPoints > getMaximumActionPoints()) ? getMaximumActionPoints() : actionPoints;
-		//TODO: this.currentActionPoints = actionPoints
+		this.currentActionPoints = Math.min(actionPoints,getMaximumActionPoints());
 		if(actionPoints < 0)
 			this.currentActionPoints = 0;
 	}
