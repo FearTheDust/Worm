@@ -13,7 +13,7 @@ import worms.model.Worm;
 import worms.util.Position;
 
 public class WormTest {
-	//TODO: moeten alle gevallen als commentaar beschreven worden of is de naam vd worm + de naam vd functie voldoende?
+	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
@@ -30,6 +30,9 @@ public class WormTest {
 	public void tearDown() throws Exception {
 	}	
 	
+	/**
+	 * Test Worm with a given amount of action points
+	 */
 	@Test
 	public void testWormPositionAngleRadiusNameActionpoints() {
 		Worm worm = new Worm(new Position(-1,2), 3, 4, "Testworm", 5);
@@ -40,6 +43,9 @@ public class WormTest {
 		assertEquals(worm.getCurrentActionPoints(),5);	
 	}
 
+	/**
+	 * Test Worm with default action points
+	 */
 	@Test
 	public void testWormPositionAngleRadiusName() {
 		Worm worm = new Worm(new Position(-1,2), 3, 4, "Testworm");
@@ -50,8 +56,11 @@ public class WormTest {
 		assertEquals(worm.getCurrentActionPoints(),worm.getMaximumActionPoints());
 	}
 
+	/**
+	 * Test jump with a legal angle
+	 */
 	@Test
-	public void testJump_LegalAngle() {
+	public void testJump_Legal() {
 		Worm worm = new Worm(new Position(0,0), Math.PI/4, 1, "Test Jump Legal", 1);
 		Position oldJump=worm.jumpStep(worm.jumpTime());
 		worm.jump();
@@ -59,8 +68,11 @@ public class WormTest {
 		assertEquals(worm.getCurrentActionPoints(),0);
 	}
 	
+	/**
+	 * Test jump with a legal angle to the right
+	 */
 	@Test
-	public void testJump_LegalAngleRight() {
+	public void testJump_LegalRight() {
 		Worm worm = new Worm(new Position(0,0), 0, 1, "Test Jump Right", 1);
 		Position oldJump=worm.jumpStep(worm.jumpTime());
 		worm.jump();
@@ -68,8 +80,11 @@ public class WormTest {
 		assertEquals(worm.getCurrentActionPoints(),0);
 	}
 	
+	/**
+	 * Test jump with a legal angle to the left
+	 */
 	@Test
-	public void testJump_LegalAngleLeft() {
+	public void testJump_LegalLeft() {
 		Worm worm = new Worm(new Position(0,0), Math.PI, 1, "Test Jump Left", 1);
 		Position oldJump=worm.jumpStep(worm.jumpTime());
 		worm.jump();
@@ -77,16 +92,22 @@ public class WormTest {
 		assertEquals(worm.getCurrentActionPoints(),0);
 	}
 	
+	/**
+	 * Test jump with an illegal angle
+	 */
 	@Test
-	public void testJump_IllegalAngle() {
+	public void testJump_Illegal() {
 		Worm worm = new Worm(new Position(0,0), 3*Math.PI/2, 1, "Test Jump Illegal", 1);
 		worm.jump();
 		assertEquals(worm.getPosition(),new Position(0,0));
 		assertEquals(worm.getCurrentActionPoints(),1);
 	}
 
+	/**
+	 * Test jumpStep with a legal time
+	 */
 	@Test
-	public void testJumpStep_LegalArgument() {
+	public void testJumpStep_Legal() {
 		Worm worm = new Worm(new Position(0,0), Math.PI/4, 1, "Test JumpStep Legal", 1);
 		
 		Position position = worm.jumpStep(worm.jumpTime());
@@ -95,32 +116,35 @@ public class WormTest {
 	}
 	
 	/**
-	 * Argument time too high to handle.
+	 * Test jumpStep with the time too high
 	 */
 	@Test(expected=IllegalArgumentException.class)
-	public void testJumpStep_TooHighArgument() {
+	public void testJumpStep_TooHigh() {
 		Worm worm = new Worm(new Position(0,0), Math.PI/4, 1, "Test JumpStep Too High", 1);				
 		worm.jumpStep(worm.jumpTime()+10);
 	}
 	
 	/**
-	 * Argument time too low (<0)
+	 * Test jumpStep with the time too low
 	 */
 	@Test(expected=IllegalArgumentException.class)
-	public void testJumpStep_TooLowArgument() {
+	public void testJumpStep_TooLow() {
 		Worm worm = new Worm(new Position(0,0), Math.PI/4, 1, "Test JumpStep Too Low", 1);	
 		worm.jumpStep(-1);
 	}
 	
 	/**
-	 * Test jumpTime for angle PI/2, 1 Action Point and 1 radius.
+	 * Test jumpTime with a legal angle
 	 */
 	@Test
-	public void testJumpTime() {
+	public void testJumpTime_Legal() {
 		Worm worm = new Worm(new Position(0,0), Math.PI/2, 1, "Test JumpTime", 1);
 		assertEquals(worm.jumpTime(), 1.00011, 1E-5);
 	}
 
+	/**
+	 * Test jumpTime with an angle too high to jump
+	 */
 	@Test
 	public void testJumpTime_Zero() {
 		Worm worm = new Worm(new Position(0,0), 3*Math.PI/2, 1, "Test JumpTime Zero", 1);
@@ -128,7 +152,7 @@ public class WormTest {
 	}
 	
 	/**
-	 * Test Move regular case
+	 * Test Move with a legal amounts of steps and sufficient amount of action points
 	 */
 	@Test
 	public void testMove_Legal() {
@@ -141,7 +165,7 @@ public class WormTest {
 	}
 	
 	/**
-	 * Test Move with an illegal amount of steps (<0).
+	 * Test Move with an illegal amount of steps
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testMove_IllegalSteps() {
@@ -150,7 +174,7 @@ public class WormTest {
 	}
 	
 	/**
-	 * Test Move with an insufficient amount of AP to perform the move. 
+	 * Test move with insufficient amount of action points
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testMove_IllegalActionPoints() {
@@ -159,21 +183,26 @@ public class WormTest {
 	}
 
 	/**
-	 * Test MoveCost for 2 steps and PI/4 angle (regular case)
+	 * Test getMoveCost
 	 */
 	@Test
 	public void testGetMoveCost() {
 		assertEquals(Worm.getMoveCost(2, Math.PI/4), 8);
 	}
 
+	/**
+	 * Test turn with a negative angle
+	 */
 	@Test
-	public void testTurn_Positive() {
-		Worm worm = new Worm(new Position(0,0), 3 * Math.PI / 2, 1, "Test Turn Positive", 16);
-		worm.turn(Math.PI/2);
-		assertEquals(worm.getAngle(),0,1E-9);
+	public void testTurn_Negative() {
+		Worm worm = new Worm(new Position(0,0), 3.0/2.0 * Math.PI, 1, "Test Turn Negative", 16);
+		worm.turn(-Math.PI/2);
+		assertEquals(worm.getAngle(),Math.PI,1E-9);
 		assertEquals(worm.getCurrentActionPoints(),1);
 	}
-
+	/**
+	 * Test turn with the angle = 0
+	 */
 	@Test
 	public void testTurn_Zero() {
 		Worm worm = new Worm(new Position(0,0), 3.0/2.0 * Math.PI, 1, "Test Turn Zero", 16);
@@ -182,16 +211,18 @@ public class WormTest {
 		assertEquals(worm.getCurrentActionPoints(),16);
 	}
 	
+	/**
+	 * Test turn with a positive angle
+	 */
 	@Test
-	public void testTurn_Negative() {
-		Worm worm = new Worm(new Position(0,0), 3.0/2.0 * Math.PI, 1, "Test Turn Negative", 16);
-		worm.turn(-Math.PI/2);
-		assertEquals(worm.getAngle(),Math.PI,1E-9);
+	public void testTurn_Positive() {
+		Worm worm = new Worm(new Position(0,0), 3 * Math.PI / 2, 1, "Test Turn Positive", 16);
+		worm.turn(Math.PI/2);
+		assertEquals(worm.getAngle(),0,1E-9);
 		assertEquals(worm.getCurrentActionPoints(),1);
 	}
-	
 	/**
-	 * Case angle -PI
+	 * Test getTurnCost with a negative angle
 	 */
 	@Test
 	public void testGetTurnCost_Negative() {
@@ -199,7 +230,7 @@ public class WormTest {
 	}
 	
 	/**
-	 * Case angle 0
+	 * Test getTurnCost with the angle = 0
 	 */
 	@Test
 	public void testGetTurnCost_Zero() {
@@ -207,25 +238,33 @@ public class WormTest {
 	}
 		
 	/**
-	 * Case angle PI
+	 * Test getTurnCost with a positive angle
 	 */
 	@Test
 	public void testGetTurnCost_Positive() {
 		assertEquals(Worm.getTurnCost(Math.PI), 30);
 	}
 
+	/**
+	 * Test isValidAngle with legal angles
+	 */
+	@Test
 	public void TestIsValidAngle_Legal(){
 		assert(Worm.isValidAngle(Math.PI));
-		assert(Worm.isValidAngle(Math.PI));
+		assert(Worm.isValidAngle(0));
 	}
 	
+	/**
+	 * Test isValidAngle with illegal angles
+	 */
+	@Test
 	public void TestIsValidAngle_Illegal(){
 		assertFalse(Worm.isValidAngle(2*Math.PI));
 		assertFalse(Worm.isValidAngle(-1));
 	}
 	
 	/**
-	 * Test the radius setter in a regular case.
+	 * Test setRadius with a legal radius
 	 */
 	@Test
 	public void testSetRadius_Legal() {
@@ -234,12 +273,18 @@ public class WormTest {
 		assertEquals(worm.getRadius(), 1, 0);
 	}
 	
+	/**
+	 * Test setRadius with a radius lower than the minimum radius
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testSetRadius_Illegal() {
 		Worm worm = new Worm(new Position(0,0), 0, 2, "Test Radius Illegal");
 		worm.setRadius(worm.getMinimumRadius()-0.1);
 	}
 	
+	/**
+	 * Test setRadius with radius = NaN
+	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testSetRadius_NaN() {
 		Worm worm = new Worm(new Position(0,0), 0, 2, "Test Radius NaN");
@@ -256,7 +301,7 @@ public class WormTest {
 	}
 
 	/**
-	 * Test Legal name.
+	 * Test setName with a legal name
 	 */
 	@Test
 	public void testSetName_Legal() {
@@ -267,16 +312,16 @@ public class WormTest {
 	}
 	
 	/**
-	 * Test illegal Name case (lower first letter)
+	 * Test setName with an illegal name
 	 */
 	@Test(expected=IllegalArgumentException.class)
-	public void testSetName_IllegalName() {
+	public void testSetName_Illegal() {
 		Worm worm = new Worm(new Position(0,0), 0, 1, "Test Name Illegal");
 		worm.setName("eric");
 	}
 
 	/**
-	 * Legal case
+	 * Test isValidName with legal names
 	 */
 	@Test
 	public void testIsValidName_Legal() {
@@ -285,12 +330,12 @@ public class WormTest {
 	}
 
 	/**
-	 * Test illegal cases
+	 * Test isValidName with illegal names
 	 * First letter lower
-	 * Non alphabetic letter (excl space, ' and ")
+	 * Non alphabetic letter (excluding space, ' and ")
 	 * Illegal character \n 
 	 * length < 2
-	 * * null
+	 * null
 	 */
 	@Test
 	public void testIsValidName_Illegal() {
@@ -302,21 +347,21 @@ public class WormTest {
 	}
 	
 	/**
-	 * Test getMaximumActionPoints in the case that the radius is too high resulting in the MaxActionPoints being bigger than Integer.MAX_VALUE.
+	 * Test getMaximumActionPoints with the radius too high resulting in the MaxActionPoints being bigger than Integer.MAX_VALUE
 	 */
 	@Test
 	public void testGetMaximumActionPoints_HighestMaximum() {
-		Worm worm = new Worm(new Position(0,0), 0, Double.MAX_VALUE, "Test High Max Points");
+		Worm worm = new Worm(new Position(0,0), 0, Double.MAX_VALUE, "Test Max AP Max Value");
 		
 		assertEquals(worm.getMaximumActionPoints(), Integer.MAX_VALUE);
 	}
 	
 	/**
-	 * Test getMaximumActionPoints in a regular case.
+	 * Test getMaximumActionPoints with legal action points
 	 */
 	@Test
-	public void testGetMaximumActionPoints_RegularCase() {
-		Worm worm = new Worm(new Position(0,0), 0, 1, "Test High Regular Case");
+	public void testGetMaximumActionPoints_Legal() {
+		Worm worm = new Worm(new Position(0,0), 0, 1, "Test Max AP Legal");
 		assertEquals(worm.getMaximumActionPoints(), 4448);
 	}
 
