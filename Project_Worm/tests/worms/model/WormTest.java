@@ -137,7 +137,7 @@ public class WormTest {
 		
 		assertEquals(worm.getPosition().getX(), 2, 0);
 		assertEquals(worm.getPosition().getY(), 0, 0);
-		assertEquals(worm.getCurrentActionPoints(),1); //TODO: heb ik hier toegevoegd, vergeten of moet niet?
+		assertEquals(worm.getCurrentActionPoints(),1);
 	}
 	
 	/**
@@ -228,7 +228,7 @@ public class WormTest {
 	 * Test the radius setter in a regular case.
 	 */
 	@Test
-	public void testSetRadius() { //TODO: moeten de IllegalArgumentExceptions niet getest worden?
+	public void testSetRadius() { //TODO: Tests for IlegalArgumentException
 		Worm worm = new Worm(new Position(0,0), 0, 2, "Test Radius Legal");
 		worm.setRadius(1);
 		assertEquals(worm.getRadius(), 1, 0);
@@ -267,7 +267,7 @@ public class WormTest {
 	 * Legal case
 	 */
 	@Test
-	public void testIsValidName_Legal() { //TODO: alle Legals en alle Illegals mochten samen he?
+	public void testIsValidName_Legal() {
 		assert(Worm.isValidName("James o'Hara"));
 		assert(Worm.isValidName("James o\"Hara"));
 	}

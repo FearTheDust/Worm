@@ -39,7 +39,7 @@ public class Facade implements IFacade {
 	}
 
 	@Override
-	public void turn(Worm worm, double angle) { //TODO: Tests
+	public void turn(Worm worm, double angle) {
 		angle %= 2*Math.PI;
 		
 		if(angle < -Math.PI) {

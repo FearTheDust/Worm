@@ -10,7 +10,6 @@ import be.kuleuven.cs.som.annotate.*;
  *  @author Derkinderen Vincent
  *  @author Coosemans Brent
  *  
- *  @version 1.1 //TODO: moet dat erbij?
  */
 
 public class Position {
