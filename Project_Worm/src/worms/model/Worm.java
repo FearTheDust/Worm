@@ -22,7 +22,7 @@ import worms.util.*;
 
 
 /**
- * A class representing worms with a position, a direction it's facing, a radius and a name.
+ * A class representing worms with a position, a direction it's facing, a radius, a mass, an amount of action points and a name.
  * 
  * @author Derkinderen Vincent - Bachelor Informatica - R0458834
  * @author Coosemans Brent - Bachelor Informatica - R0376498
@@ -392,6 +392,7 @@ public class Worm {
 			throw new IllegalArgumentException("The radius has to be greater than or equal to the minimum radius " + minRadius);
 		if(Double.isNaN(radius))
 			throw new IllegalArgumentException("The radius must be a number.");
+		
 		int APdiff = this.getMaximumActionPoints() - this.getCurrentActionPoints();
 		this.radius = radius;
 		this.setCurrentActionPoints(this.getMaximumActionPoints()-APdiff);
