@@ -4,13 +4,13 @@ public class Util {
 	public static final double DEFAULT_EPSILON = 1e-4;
 	
 	/**
-	 * This function replaces % with more precision.
+	 * This function replaces % with more precision and is meant to be used when working with modulo Math.PI.
 	 * This function returns the rest of the dividend / divisor.
 	 * 
 	 * @param dividend The dividend
 	 * @param divisor The divisor
 	 * 
-	 * @return The rest of dividend/divisor.
+	 * @return  The rest of dividend/divisor.
 	 * 
 	 * @return If dividend or divisor is Not a Number this returns Double.NaN
 	 * 			| if(Double.isNaN(dividend) || Double.isNaN(divisor)) then
@@ -20,9 +20,9 @@ public class Util {
      * 			| if(Double.isInfinite(dividend)) then
      *			| result == Double.NaN;	
      *
-     * @return If dividend is not infinite and divisor is infinite the dividend is returned.
+     * @return If dividend is not infinite and divisor is infinite 0 is returned.
      * 			| if(!Double.isInfinite(dividend) && Double.isInfinite(divisor))
-     * 			| result == dividend;
+     * 			| result == 0;
      * 
      * @return If divisor is 0 or 1 the dividend is returned.
      * 			| if(Util.fuzzyEquals(divisor, 0, 1E-9) || Util.fuzzyEquals(divisor, 1, 1E-9))
@@ -36,7 +36,7 @@ public class Util {
     		return Double.NaN;
     	
     	if(!Double.isInfinite(dividend) && Double.isInfinite(divisor))
-    		return dividend;
+    		return 0;
     		
     	if(Util.fuzzyEquals(divisor, 0, 1E-9) || Util.fuzzyEquals(divisor, 1, 1E-9))
     		return dividend;
@@ -48,6 +48,7 @@ public class Util {
     			dividend += divisor;
     		}
     	}
+    	
     	return dividend;
     }
 
