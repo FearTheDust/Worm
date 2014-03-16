@@ -10,7 +10,8 @@ import org.junit.Test;
 import worms.util.Util;
 
 /**
- * @author Admin
+ * @author Derkinderen Vincent
+ * @author Coosemans Brent
  *
  */
 public class UtilTest {
