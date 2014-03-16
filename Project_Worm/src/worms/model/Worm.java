@@ -30,20 +30,26 @@ import worms.util.Util;
  * 
  * 
  * 
- * @invar	This worm's action points amount is at all times less than or equal to the maximum amount of action points and greater than or equal to 0.
+ * @invar	This worm's action points amount is at all times less than or equal to the maximum amount of action points allowed and greater than or equal to 0.
  * 			| 0 <= this.getCurrentActionPoints() <= this.getMaximumActionPoints()
  * 
- * @invar	| This worm's name is at all times a valid name.
+ * @invar	| This worm's name is a valid name.
  * 			| isValidName(this.getName())
  * 
- * @invar	This worm's radius is at all times higher than or equal to the minimum radius.
+ * @invar	This worm's radius is higher than or equal to the minimum radius.
  * 			| this.getRadius() >= this.getMinimumRadius()
  * 
  * @invar	This worm's angle is at all times a valid angle.
  * 			| isValidAngle(this.getAngle())
  * 
- * @invar	No double will have the value of "Not A Number" and neither will any double returning function return it.
+ * @invar 	The mass of this worm follows, at all times, the formula:
+ * 			| getDensity() * (4.0/3.0) * Math.PI * Math.pow(this.getRadius(),3) == this.getMass()
+ * 
+ * @invar	No double will have the value of "Not A Number" and neither will any "double returning function" return it.
  *			| !Double.isNaN(...)
+ *
+ * @invar	The position of this worm is never null.
+ *			| this.getPosition() != null 
  */
 public class Worm {
 
@@ -110,13 +116,13 @@ public class Worm {
 	/**
 	 * Returns the position of this worm.
 	 */
-	@Basic
+	@Basic @Raw
 	public Position getPosition() {
 		return position;
 	}
 	
 	/**
-	 * This worm jumps to a certain position.
+	 * This worm jumps to a certain position calculated by a formula.
 	 * 
 	 * @post	The current amount of action points is 0 if the current angle isn't greater than Math.PI.
 	 * 			| if(!(this.getAngle() > Math.PI)) Then
@@ -139,10 +145,11 @@ public class Worm {
 	 * @param time The time of when we return the position.
 	 * 
 	 * @return	When the time equals 0 or the angle of this worm is greater than Math.PI, the current position will be returned.
-	 * 			| if((time == 0) || (this.getAngle()> Math.PI)) Then
+	 * 			| if((time == 0) || (this.getAngle() > Math.PI)) Then
 	 * 			| result == this.getPosition(); 
 	 * 
-	 * @return The position this worm has at a certain time in a jump.
+	 * @return Else return The position this worm has at a certain time in a jump.
+	 * 			| Else
 	 * 			| force = 5 * this.getCurrentActionPoints() + this.getMass() * EARTH_ACCELERATION
 	 * 			| startSpeed = (force / this.getMass()) * FORCE_TIME
 	 * 			| startSpeedX = startSpeed * Math.cos(this.getAngle())
@@ -188,8 +195,9 @@ public class Worm {
 	/**
 	 * Returns the jump time if jumped with this worm's current angle.
 	 * 
-	 * @return The time used to jump.
-	 * 			| If this.getAngle() >= Math.PI Then result == 0
+	 * @return The time used to jump. When this worm's angle is greater than Math.PI, 0 is returned.
+	 * 			| If this.getAngle() > Math.PI Then 
+	 * 			| result == 0
 	 * 			| Else
 	 * 			| force = 5 * this.getCurrentActionPoints() + this.getMass() * EARTH_ACCELERATION
 	 * 			| startSpeed = (force / this.getMass()) * FORCE_TIME
@@ -219,17 +227,16 @@ public class Worm {
 	 * @param steps The amount of steps this worm takes.
 	 * 
 	 * @post	The new position is the old position plus the amount of steps proportional to the direction this worm is facing.
-	 * 			| new.getPosition()==new Position(
-	 * 				this.getPosition().getX() + steps*Math.cos(this.getAngle())*this.getRadius(),
-	 * 				this.getPosition().getY() + steps*Math.sin(this.getAngle())*this.getRadius())
+	 * 			| new.getPosition() == new Position(
+	 * 				this.getPosition().getX() + steps * Math.cos(this.getAngle()) * this.getRadius(),
+	 * 				this.getPosition().getY() + steps * Math.sin(this.getAngle()) * this.getRadius())
 	 * 
-	 * @post	The new action points is equal to the old action points minus the cost to move.
-	 * 			| new.getCurrentActionPoints() ==
-	 * 				this.getCurrentActionPoints() - getMoveCost(steps,this.getAngle())
+	 * @effect	The new action points amount is set to the old amount minus the cost to move.
+	 * 			| this.setCurrentActionPoints(getCurrentActionPoints() - getMoveCost(steps,getAngle()));
 	 * 
 	 * @throws IllegalArgumentException
 	 * 			If steps is smaller than zero or if this worm doesn't have enough action points.
-	 * 			| steps<0 || this.getMoveCost(steps,this.getAngle())>this.getCurrentActionPoints()
+	 * 			| steps < 0 || this.getMoveCost(steps,this.getAngle()) > this.getCurrentActionPoints()
 	 */
 	public void move(int steps) throws IllegalArgumentException {
 		if(steps < 0)
@@ -237,13 +244,11 @@ public class Worm {
 		if(getMoveCost(steps,getAngle()) > getCurrentActionPoints())
 			throw new IllegalArgumentException("You don't have enough Action Points");
 		
-		double x= this.getPosition().getX() + steps*Math.cos(getAngle())*getRadius();
-		double y= this.getPosition().getY() + steps*Math.sin(getAngle())*getRadius();
+		double x= this.getPosition().getX() + steps * Math.cos(getAngle()) * getRadius();
+		double y= this.getPosition().getY() + steps * Math.sin(getAngle()) * getRadius();
 		
+		setCurrentActionPoints(getCurrentActionPoints()-getMoveCost(steps,getAngle()));
 		setPosition(new Position(x,y));
-		
-		int actionPoints=getCurrentActionPoints()-getMoveCost(steps,getAngle());
-		setCurrentActionPoints(actionPoints);
 	}
 	
 	/**
@@ -253,7 +258,7 @@ public class Worm {
 	 * @param angle Determines the direction to move in.
 	 * 
 	 * @return 	The cost to move.
-	 * 			| (steps*Math.ceil((Math.abs(Math.cos(angle)) + Math.abs(4*Math.sin(angle)))))
+	 * 			| result == (int) (steps*Math.ceil((Math.abs(Math.cos(angle)) + Math.abs(4*Math.sin(angle)))))
 	 */
 	public static int getMoveCost(int steps, double angle){
 		return (int) (steps * Math.ceil(Math.abs(Math.cos(angle)) + Math.abs(4*Math.sin(angle))) );
@@ -280,6 +285,7 @@ public class Worm {
 	
 	private Position position;
 
+	
 	/**
 	 * Returns the angle of this worm.
 	 */
@@ -291,22 +297,22 @@ public class Worm {
 	/**
 	 * Turn this worm with a given angle.
 	 * 
-	 * @param angle The angle to turn.
+	 * @param angle The angle to turn with.
 	 * 
 	 * @pre		The absolute value of twice the angle must be valid or equal to Math.abs(Math.PI).
-	 * 			| isValidAngle(Math.abs(2*angle)) || Math.abs(angle) == Math.PI	
+	 * 			| isValidAngle(Math.abs(2*angle)) || Util.fuzzyEquals(Math.abs(angle), Math.PI)
 	 * 		
 	 * @pre		The cost to turn should be less than or equal to the amount of action points we have.
 	 * 			| this.getCurrentActionPoints() >= getTurnCost(angle)
 	 * 
-	 * @post	This worm's new action points is equal to the old amount of action points minus the cost to turn.
-	 * 			| new.getCurrentActionPoints() = this.getCurrentActionPoints() - getTurnCost(angle)
+	 * @effect	This worm's new action points is set to the old amount of action points minus the cost to turn.
+	 * 			| this.setCurrentActionPoints(this.getCurrentActionPoints() - getTurnCost(angle))
 	 * 
-	 * @post	This worm's new direction is equal to the old angle plus the given angle plus 2*Math.PI modulo 2*Math.PI.
-	 * 			| new.getAngle() = Util.modulo(this.getAngle() + angle + 2*Math.PI, 2*Math.PI)
+	 * @effect	This worm's new direction is set to the old angle plus the given angle plus 2*Math.PI modulo 2*Math.PI.
+	 * 			| this.setAngle(Util.modulo(this.getAngle() + angle + 2*Math.PI, 2*Math.PI));
 	 */
 	public void turn(double angle) {
-		assert isValidAngle(Math.abs(2*angle)) || Math.abs(angle) == Math.PI;
+		assert isValidAngle(Math.abs(2*angle)) || Util.fuzzyEquals(Math.abs(angle), Math.PI);
 		assert this.getCurrentActionPoints() >= getTurnCost(angle);
 		
 		this.setAngle(Util.modulo(this.getAngle() + angle + 2*Math.PI, 2*Math.PI));
@@ -314,11 +320,11 @@ public class Worm {
 	}
 	
 	/**
-	 * Returns the cost to change the orientation by adding the given angle to the current orientation.
-	 * 
+	 * Returns the cost to change the orientation to the angle formed by adding the given angle to the current orientation.
 	 * @param angle The angle to turn.
 	 * 
 	 * @return The cost to turn.
+	 * 			| result == (int) Math.abs(Math.ceil(30 * (angle / Math.PI)))
 	 */
 	public static int getTurnCost(double angle) {
 		return (int) Math.abs(Math.ceil(30 * (angle / Math.PI)));
@@ -329,7 +335,8 @@ public class Worm {
 	 * 
 	 * @param angle The angle to check.
 	 * 
-	 * @return Whether or not the given angle is valid.
+	 * @return	Whether or not the given angle is valid.
+	 * 			| result == Util.fuzzyGreaterThanOrEqualTo(angle, 0) && (angle < 2*Math.PI)
 	 */
 	public static boolean isValidAngle(double angle){
 		return Util.fuzzyGreaterThanOrEqualTo(angle, 0) && (angle < 2*Math.PI);
@@ -363,12 +370,18 @@ public class Worm {
 	
 	/**
 	 * Set the new radius of this worm and update the action points accordingly.
-	 * Updating the action points means when the maximum amount of action points gets lower than our current amount, our current amount will be equal to the maximum amount.
+	 * Updating the action points means the difference between current and maximum amount of action points remains the same.
+	 * If this would mean the action points will be less than 0, the current amount will be set to 0.
 	 * 
 	 * @param radius The new radius of this worm.
 	 * 
 	 * @post	The radius of this worm is equal to the given radius.
 	 * 			| new.getRadius() == radius
+	 * 
+	 * @effect	The amount of action points is set to a new amount calculated by the difference in old maximum and current amount along with with the new Maximum.
+	 * 			| APdiff = this.getMaximumActionPoints() - this.getCurrentActionPoints();
+	 * 			| //Radius change
+	 *			| this.setCurrentActionPoints(this.getMaximumActionPoints() - APdiff);
 	 * 
 	 * @throws IllegalArgumentException
 	 * 			When the given radius is less than the minimum radius.
@@ -385,7 +398,7 @@ public class Worm {
 		if(Double.isNaN(radius))
 			throw new IllegalArgumentException("The radius must be a number.");
 		
-		int APdiff = this.getMaximumActionPoints()-this.getCurrentActionPoints();
+		int APdiff = this.getMaximumActionPoints() - this.getCurrentActionPoints();
 		this.radius = radius;
 		this.setCurrentActionPoints(this.getMaximumActionPoints()-APdiff);
 	}
@@ -442,7 +455,7 @@ public class Worm {
 	/**
 	 * Returns this worm's name.
 	 */
-	@Basic
+	@Basic @Raw
 	public String getName() {
 		return name;
 	}
@@ -501,9 +514,10 @@ public class Worm {
 	 * 
 	 * @param actionPoints The new amount of action points.
 	 * 
-	 * @post	If actionPoints is greater than the maximum action points allowed, the maximum will be set.
-	 * 			If actionPoints is less than or equal to the maximum allowed, the current action points will be set to actionPoints. 
-	 * 			| new.getCurrentActionPoints() == (actionPoints > this.getMaxActionPoints()) ? this.getMaxActionPoints() : actionPoints
+	 * @post	If actionPoints is greater than or equal to zero,
+	 * 			The new action point amount will be set to the minimum value, being actionPoints or getMaximumActionPoints()
+	 * 			| if(actionPoints >= 0)
+	 * 			| new.getCurrentActionPoints() == Math.min(actionPoints, this.getMaximumActionPoints)
 	 * 
 	 * @post	If the actionPoints is less than zero, zero will be set.
 	 * 			| if(actionPoints < 0)
@@ -511,9 +525,7 @@ public class Worm {
 	 */
 	@Raw @Model
 	private void setCurrentActionPoints(int actionPoints) {
-		this.currentActionPoints = Math.min(actionPoints,getMaximumActionPoints());
-		if(actionPoints < 0)
-			this.currentActionPoints = 0;
+		this.currentActionPoints = (actionPoints < 0) ? 0 : Math.min(actionPoints, getMaximumActionPoints());
 	}
 	
 	/**

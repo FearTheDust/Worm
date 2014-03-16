@@ -1,15 +1,11 @@
 package worms.model;
 
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import worms.model.Worm;
 import worms.util.Position;
 
 /**
@@ -19,27 +15,21 @@ import worms.util.Position;
  */
 public class WormTest {
 	
+	/*
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
 	}
 
 	@Before
 	public void setUp() throws Exception {
 	}
-
-	@After
-	public void tearDown() throws Exception {
-	}	
+	*/	
 	
 	/**
 	 * Test Worm with a given amount of action points
 	 */
 	@Test
-	public void testWormPositionAngleRadiusNameActionpoints() {
+	public void testWorm_PositionAngleRadiusNameActionpoints() {
 		Worm worm = new Worm(new Position(-1,2), 3, 4, "Testworm", 5);
 		assertEquals(worm.getPosition(),new Position(-1,2));
 		assertEquals(worm.getAngle(),3,0);
@@ -58,7 +48,7 @@ public class WormTest {
 		assertEquals(worm.getAngle(),3,0);
 		assertEquals(worm.getRadius(),4,0);
 		assertEquals(worm.getName(),"Testworm");
-		assertEquals(worm.getCurrentActionPoints(),worm.getMaximumActionPoints());
+		assertEquals(worm.getCurrentActionPoints(), worm.getMaximumActionPoints());
 	}
 
 	/**
