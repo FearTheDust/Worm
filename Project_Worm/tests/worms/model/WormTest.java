@@ -1,11 +1,8 @@
 package worms.model;
 
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-
+import static org.junit.Assert.*;
 import org.junit.Test;
-
 import worms.util.Position;
 
 /**
@@ -69,9 +66,9 @@ public class WormTest {
 	@Test
 	public void testJump_LegalRight() {
 		Worm worm = new Worm(new Position(0,0), 0, 1, "Test Jump Right", 1);
-		Position oldJump=worm.jumpStep(worm.jumpTime());
+		Position afterJump=worm.jumpStep(worm.jumpTime());
 		worm.jump();
-		assertEquals(worm.getPosition(),oldJump);
+		assertEquals(worm.getPosition(),afterJump);
 		assertEquals(worm.getCurrentActionPoints(),0);
 	}
 	
@@ -81,9 +78,9 @@ public class WormTest {
 	@Test
 	public void testJump_LegalLeft() {
 		Worm worm = new Worm(new Position(0,0), Math.PI, 1, "Test Jump Left", 1);
-		Position oldJump=worm.jumpStep(worm.jumpTime());
+		Position afterJump=worm.jumpStep(worm.jumpTime());
 		worm.jump();
-		assertEquals(worm.getPosition(),oldJump);
+		assertEquals(worm.getPosition(),afterJump);
 		assertEquals(worm.getCurrentActionPoints(),0);
 	}
 	
@@ -93,8 +90,9 @@ public class WormTest {
 	@Test
 	public void testJump_Illegal() {
 		Worm worm = new Worm(new Position(0,0), 3*Math.PI/2, 1, "Test Jump Illegal", 1);
+		Position oldPosition=worm.getPosition();
 		worm.jump();
-		assertEquals(worm.getPosition(),new Position(0,0));
+		assertEquals(worm.getPosition(),oldPosition);
 		assertEquals(worm.getCurrentActionPoints(),1);
 	}
 
@@ -104,7 +102,6 @@ public class WormTest {
 	@Test
 	public void testJumpStep_Legal() {
 		Worm worm = new Worm(new Position(0,0), Math.PI/4, 1, "Test JumpStep Legal", 1);
-		
 		Position position = worm.jumpStep(worm.jumpTime());
 		assertEquals(position.getX(), 2.45222451, 1E-3);
 		assertEquals(position.getY(), 0, 1E-4);
@@ -147,11 +144,11 @@ public class WormTest {
 	}
 	
 	/**
-	 * Test Move (horizontally) with a legal amounts of steps and sufficient amount of action points
+	 * Test Move(horizontally) with a legal amounts of steps and sufficient amount of action points
 	 */
 	@Test
 	public void testMove_Horizontal() {
-		Worm worm = new Worm(new Position(0,0), 0, 1, "Test move horizontal");
+		Worm worm = new Worm(new Position(0,0), 0, 1, "Test Move Horizontal");
 		int oldAP=worm.getCurrentActionPoints();
 		worm.move(5);
 		assertEquals(worm.getPosition(), new Position(5,0));
@@ -159,11 +156,11 @@ public class WormTest {
 	}
 
 	/**
-	 * Test Move (vertically) with a legal amounts of steps and sufficient amount of action points
+	 * Test Move(vertically) with a legal amounts of steps and sufficient amount of action points
 	 */
 	@Test
 	public void testMove_Vertical() {
-		Worm worm = new Worm(new Position(0,0), Math.PI / 2,  1, "Test move vertical");
+		Worm worm = new Worm(new Position(0,0), Math.PI / 2,  1, "Test Move Vertical");
 		int oldAP = worm.getCurrentActionPoints();
 		worm.move(5);
 		assertEquals(worm.getPosition(), new Position(0,5));
@@ -227,6 +224,7 @@ public class WormTest {
 		assertEquals(worm.getAngle(),0,1E-9);
 		assertEquals(worm.getCurrentActionPoints(),1);
 	}
+	
 	/**
 	 * Test getTurnCost with a negative angle
 	 */

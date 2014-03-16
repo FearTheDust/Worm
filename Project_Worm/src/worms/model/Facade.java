@@ -5,7 +5,6 @@ import worms.util.Position;
 /**
  * @author Coosemans Brent
  * @author Derkinderen Vincent
- *
  */
 public class Facade implements IFacade {
 
@@ -47,7 +46,6 @@ public class Facade implements IFacade {
 		} else if(angle > Math.PI) {
 			angle -= 2*Math.PI;
 		}
-		
 		worm.turn(angle);
 	}
 

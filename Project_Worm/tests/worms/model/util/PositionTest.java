@@ -1,17 +1,12 @@
 package worms.model.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
+import static org.junit.Assert.*;
 import org.junit.Test;
-
 import worms.util.Position;
 
 /**
  * @author Coosemans Brent
  * @author Derkinderen Vincent
- *
  */
 public class PositionTest {
 	
@@ -60,10 +55,8 @@ public class PositionTest {
 		
 		/* Tests */
 		assertTrue(firstPosition00.equals(secondPosition00)); //Same instance, same values
-		
 		assertFalse(firstPosition00.equals(firstPosition10)); // same instance, different values
 		assertFalse(firstPosition00.equals(null)); // null
 		assertFalse(firstPosition00.equals(this)); //other instance
 	}
-
 }

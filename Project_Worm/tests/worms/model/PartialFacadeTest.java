@@ -1,18 +1,13 @@
 package worms.model;
+
 import static org.junit.Assert.*;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import worms.util.Position;
-import worms.util.Util;
+import org.junit.*;
+import worms.util.*;
 
 /**
- * 
  * @author ...
  * @author Derkinderen Vincent
  * @author Coosemans Brent
- *
  */
 public class PartialFacadeTest {
 
@@ -80,10 +75,10 @@ public class PartialFacadeTest {
 		Worm wormRich = facade.createWorm(0, 0, 0, 1, "Test Worm enough AP");
 		
 		assertFalse(facade.canTurn(wormPoor, Math.PI));
+		
 		assertTrue(facade.canTurn(wormRich, Math.PI));
 	}
 
-	
 	/**
 	 * Tests the turn(Worm, double)
 	 * in case of 4*Math.PI and -4*Math.PI
@@ -113,9 +108,4 @@ public class PartialFacadeTest {
 		facade.turn(worm, 0);
 		assertEquals(worm.getAngle(), 15*Math.PI / 8, EPS);
 	}
-	
-	
-	
-	
-	
 }

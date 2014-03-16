@@ -31,16 +31,12 @@ public class Util {
     public static double modulo(double dividend, double divisor) {
     	if(Double.isNaN(dividend) || Double.isNaN(divisor))
     		return Double.NaN;
-    	
     	if(Double.isInfinite(dividend))
     		return Double.NaN;
-    	
     	if(!Double.isInfinite(dividend) && Double.isInfinite(divisor))
-    		return dividend;
-    		
+    		return dividend;	
     	if(Util.fuzzyEquals(divisor, 0, 1E-9) || Util.fuzzyEquals(divisor, 1, 1E-9))
     		return dividend;
-    	
     	while(Math.abs(dividend / divisor) >= 1) {
     		if(dividend / divisor >= 1) {
     			dividend -= divisor;
@@ -94,5 +90,4 @@ public class Util {
 	public static double relativeError(double expected, double actual) {
 		return absoluteError(expected, actual) / Math.abs(expected);
 	}
-
 }

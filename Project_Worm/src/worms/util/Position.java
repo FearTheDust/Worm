@@ -2,16 +2,14 @@ package worms.util;
 import be.kuleuven.cs.som.annotate.*;
 
 /**
- * A class representing a position in a 2 dimensional space, represented by 2 coordinates x and y.
+ * A class representing a position in a 2 dimensional space, represented by 2 coordinates x and y. 
+ * 
+ * @author Derkinderen Vincent
+ * @author Coosemans Brent 
  * 
  * @invar 	The x- or y-coordinates are never "Not a Number".
  * 			| !Double.isNaN(this.getX()) && !Double.isNaN(this.getY())
- * 
- *  @author Derkinderen Vincent
- *  @author Coosemans Brent
- *  
  */
-
 public class Position {
 	
 	/**
@@ -33,7 +31,6 @@ public class Position {
 	public Position(double x, double y) throws IllegalArgumentException {
 		if(Double.isNaN(x) || Double.isNaN(y))
 			throw new IllegalArgumentException("A coordinate was Not a Number.");
-		
 		this.x = x;
 		this.y = y;
 	}

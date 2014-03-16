@@ -1,8 +1,7 @@
 package worms.model;
 
 import be.kuleuven.cs.som.annotate.*;
-import worms.util.Position;
-import worms.util.Util;
+import worms.util.*;
 
 /**
  * Defensive
@@ -23,12 +22,12 @@ import worms.util.Util;
 
 
 /**
+ * A class representing worms with a position, a direction it's facing, a radius and a name.
+ * 
  * @author Derkinderen Vincent - Bachelor Informatica - R0458834
  * @author Coosemans Brent - Bachelor Informatica - R0376498
  * 
  * @Repository https://github.com/FearTheDust/Worm.git
- * 
- * 
  * 
  * @invar	This worm's action points amount is at all times less than or equal to the maximum amount of action points allowed and greater than or equal to 0.
  * 			| 0 <= this.getCurrentActionPoints() <= this.getMaximumActionPoints()
@@ -191,7 +190,6 @@ public class Worm {
 		return new Position(x,y);
 	}
 	
-	
 	/**
 	 * Returns the jump time if jumped with this worm's current angle.
 	 * 
@@ -205,13 +203,11 @@ public class Worm {
 	 * 			| time = distance / (startSpeed * Math.cos(this.getAngle()))
 	 * 			| result == time
 	 */
-	
 	public double jumpTime() {
 		//this.getAngle() will automatically be less than 2*Math.PI because of the invariant.
 		if(this.getAngle() > Math.PI) {
 			return 0;
 		}
-		
 		//sin(2X) = 2sin(X)cos(X); so 2sin(X)cos(X)/cos(X) => 2sin(X) => return 0   => time can never be negative.
 		double force = 5 * this.getCurrentActionPoints() + this.getMass() * EARTH_ACCELERATION;
 		double startSpeed = (force / this.getMass()) * FORCE_TIME;
@@ -279,13 +275,11 @@ public class Worm {
 	private void setPosition(Position position) throws NullPointerException {
 		if(position == null)
 			throw new NullPointerException();
-		
 		this.position = position;
 	}
 	
 	private Position position;
 
-	
 	/**
 	 * Returns the angle of this worm.
 	 */
@@ -321,6 +315,7 @@ public class Worm {
 	
 	/**
 	 * Returns the cost to change the orientation to the angle formed by adding the given angle to the current orientation.
+	 * 
 	 * @param angle The angle to turn.
 	 * 
 	 * @return The cost to turn.
@@ -397,7 +392,6 @@ public class Worm {
 			throw new IllegalArgumentException("The radius has to be greater than or equal to the minimum radius " + minRadius);
 		if(Double.isNaN(radius))
 			throw new IllegalArgumentException("The radius must be a number.");
-		
 		int APdiff = this.getMaximumActionPoints() - this.getCurrentActionPoints();
 		this.radius = radius;
 		this.setCurrentActionPoints(this.getMaximumActionPoints()-APdiff);
