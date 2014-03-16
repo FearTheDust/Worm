@@ -8,7 +8,7 @@ public class WormSprite extends ImageSprite {
 	private final Worm worm;
 
 	public WormSprite(Worm worm) {
-		super("images/worm.png");
+		super("worm.png"); //images/worm.png changed to worm.png so we can get it to work with a jar (see ImageSprite.imageLoader)
 		this.worm = worm;
 	}
 

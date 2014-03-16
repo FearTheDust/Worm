@@ -3,7 +3,7 @@ package worms.gui.game.sprites;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.File;
+//import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -81,7 +81,8 @@ public class ImageSprite extends Sprite {
 
 	protected BufferedImage loadImage(String filename) {
 		try {
-			return ImageIO.read(new File(filename));
+			//return ImageIO.read(new File(filename)); //Changed this with the line beneath so we could get the resources for a jar to work.
+			return ImageIO.read(ClassLoader.getSystemResource(filename));
 		} catch (IOException e) {
 			throw new RuntimeException(
 					"Could not read file '" + filename + "'", e);
