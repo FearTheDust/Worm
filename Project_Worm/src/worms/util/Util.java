@@ -51,7 +51,7 @@ public class Util {
     	
     	return dividend;
     }
-
+	/*Call fuzzyEquals with given x and y and default epsilon parameter*/
 	public static boolean fuzzyEquals(double x, double y) {
 		return fuzzyEquals(x, y, DEFAULT_EPSILON);
 	}
@@ -59,8 +59,8 @@ public class Util {
 	public static boolean fuzzyEquals(double x, double y, double eps) {
 		if (Double.isNaN(x) || Double.isNaN(y))
 			return false;
-		return Math.abs(x - y) <= eps
-				|| Double.valueOf(x).equals(Double.valueOf(y));
+		return (Math.abs(x - y) <= eps
+				|| Double.valueOf(x).equals(Double.valueOf(y)));
 	}
 
 	public static boolean fuzzyLessThanOrEqualTo(double x, double y) {
@@ -93,6 +93,8 @@ public class Util {
 	}
 
 	public static double relativeError(double expected, double actual) {
+		if(expected == 0)
+			return Double.NaN;
 		return absoluteError(expected, actual) / Math.abs(expected);
 	}
 
